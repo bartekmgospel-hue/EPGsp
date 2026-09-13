@@ -1,0 +1,5 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="sportklub1.hr" tvg-name="HR Sportklub 1",HR Sportklub 1
+http://EXAMPLE/stream1
+#EXTINF:-1 tvg-id="arenasport1.rs" tvg-name="SR Arena Sport 1",SR Arena Sport 1
+http://EXAMPLE/stream2

@@ -1,0 +1,272 @@
+HR Sportklub 1 -> sportklub1.hr
+HR Sportklub 2 -> sportklub2.hr
+HR Sportklub 3 -> sportklub3.hr
+HR Sportklub 4 -> sportklub4.hr
+HR Sportklub 5 -> sportklub5.hr
+HR Sportklub 6 -> sportklub6.hr
+HR Sportklub 7 -> sportklub7.hr
+HR Sportklub 8 -> sportklub8.hr
+HR Sportklub 9 -> sportklub9.hr
+HR Sportklub 10 -> sportklub10.hr
+SR Arena Sport 1 -> arenasport1.rs
+SR Arena Sport 2 -> arenasport2.rs
+SR Arena Sport 3 -> arenasport3.rs
+SR Arena Sport 4 -> arenasport4.rs
+SR Arena Sport 5 -> arenasport5.rs
+PT SPORT TV 1 -> sporttv1.pt
+PT SPORT TV 2 -> sporttv2.pt
+PT SPORT TV 3 -> sporttv3.pt
+PT SPORT TV 4 -> sporttv4.pt
+PT SPORT TV 5 -> sporttv5.pt
+PT SPORT TV+ -> sporttvplus.pt
+BE ELEVEN PRO LEAGUE 1 -> elevenproleague1.be
+BE ELEVEN PRO LEAGUE 2 -> elevenproleague2.be
+AT SKY SPORT AUSTRIA 1 -> skysportaustria1.at
+SR ARENA SPORT PREMIUM 1 -> arenapremium1.rs
+SR ARENA SPORT PREMIUM 2 -> arenapremium2.rs
+SR ARENA SPORT PREMIUM 3 -> arenapremium3.rs
+NL ESPN 2 -> espn2.nl
+CH BLUE SPORT 1 -> bluesport1.ch
+CH BLUE SPORT 2 -> bluesport2.ch
+ES MOVISTAR LIGA DE CAMPEONES 1 -> movistarligadecampeones1.es
+ES MOVISTAR LIGA DE CAMPEONES 2 -> movistarligadecampeones2.es
+PL CANAL+ SPORT -> canalplussport.pl
+PL CANAL+ SPORT 2 -> canalplussport2.pl
+PL CANAL+ SPORT 3 -> canalplussport3.pl
+PL CANAL+ SPORT 4 -> canalplussport4.pl
+PL CANAL+ SPORT 5 -> canalplussport5.pl
+PL ELEVEN SPORTS 1 -> elevensports1.pl
+PL ELEVEN SPORTS 2 -> elevensports2.pl
+PL ELEVEN SPORTS 3 -> elevensports3.pl
+PL ELEVEN SPORTS 4 -> elevensports4.pl
+PL EUROSPORT 1 -> eurosport1.pl
+PL EUROSPORT 2 -> eurosport2.pl
+PL POLSAT SPORT -> polsatsport.pl
+PL POLSAT SPORT EXTRA -> polsatsportextra.pl
+PL POLSAT SPORT FIGHT -> polsatsportfight.pl
+PL POLSAT SPORT PREMIUM 1 -> polsatsportpremium1.pl
+PL POLSAT SPORT PREMIUM 2 -> polsatsportpremium2.pl
+UK SKY SPORTS MAIN EVENT -> skysportsmainevent.uk
+UK SKY SPORTS PREMIER LEAGUE -> skysportspremierleague.uk
+UK SKY SPORTS FOOTBALL -> skysportsfootball.uk
+UK SKY SPORTS F1 -> skysportsf1.uk
+UK SKY SPORTS CRICKET -> skysportscricket.uk
+UK SKY SPORTS GOLF -> skysportsgolf.uk
+UK SKY SPORTS TENNIS -> skysportstennis.uk
+UK SKY SPORTS ACTION -> skysportsaction.uk
+UK SKY SPORTS NEWS -> skysportsnews.uk
+UK TNT SPORTS 1 -> tntsports1.uk
+UK TNT SPORTS 2 -> tntsports2.uk
+UK TNT SPORTS 3 -> tntsports3.uk
+UK TNT SPORTS 4 -> tntsports4.uk
+IT SKY SPORT UNO -> skysportuno.it
+IT SKY SPORT CALCIO -> skysportcalcio.it
+IT SKY SPORT F1 -> skysportf1.it
+IT SKY SPORT MOTOGP -> skysportmotogp.it
+IT SKY SPORT TENNIS -> skysporttennis.it
+IT SKY SPORT MAX -> skysportmax.it
+IT SKY SPORT ARENA -> skysportarena.it
+IT SKY SPORT NBA -> skysportnba.it
+IT DAZN 1 -> dazn1.it
+IT DAZN 2 -> dazn2.it
+IT EUROSPORT 1 -> eurosport1.it
+IT EUROSPORT 2 -> eurosport2.it
+DE DAZN 1 -> dazn1.de
+DE DAZN 2 -> dazn2.de
+DE SKY SPORT TOP EVENT -> skysporttopevent.de
+DE SKY SPORT BUNDESLIGA 1 -> skysportbundesliga1.de
+DE SKY SPORT BUNDESLIGA 2 -> skysportbundesliga2.de
+DE SKY SPORT PREMIER LEAGUE -> skysportspremierleague.de
+DE SKY SPORT F1 -> skysportsf1.de
+DE SKY SPORT TENNIS -> skysporttennis.de
+DE EUROSPORT 1 -> eurosport1.de
+DE EUROSPORT 2 -> eurosport2.de
+DE SPORT1 -> sport1.de
+DE SPORT1+ -> sport1plus.de
+FR beIN SPORTS 1 -> beinsports1.fr
+FR beIN SPORTS 2 -> beinsports2.fr
+FR beIN SPORTS 3 -> beinsports3.fr
+FR CANAL+ FOOT -> canalplusfoot.fr
+FR CANAL+ SPORT -> canalplussport.fr
+FR CANAL+ SPORT 360 -> canalplussport360.fr
+FR EUROSPORT 1 -> eurosport1.fr
+FR EUROSPORT 2 -> eurosport2.fr
+FR DAZN 1 -> dazn1.fr
+GR COSMOTE SPORT 1 -> cosmotesport1.gr
+GR COSMOTE SPORT 2 -> cosmotesport2.gr
+GR COSMOTE SPORT 3 -> cosmotesport3.gr
+GR COSMOTE SPORT 4 -> cosmotesport4.gr
+GR COSMOTE SPORT 5 -> cosmotesport5.gr
+GR NOVASPORTS 1 -> novasports1.gr
+GR NOVASPORTS 2 -> novasports2.gr
+GR NOVASPORTS 3 -> novasports3.gr
+GR NOVASPORTS 4 -> novasports4.gr
+GR NOVASPORTS PRIME -> novasportsprime.gr
+GR NOVASPORTS PREMIER LEAGUE -> novasportspremierleague.gr
+RO DIGI SPORT 1 -> digisport1.ro
+RO DIGI SPORT 2 -> digisport2.ro
+RO DIGI SPORT 3 -> digisport3.ro
+RO DIGI SPORT 4 -> digisport4.ro
+RO PRIMA SPORT 1 -> primasport1.ro
+RO PRIMA SPORT 2 -> primasport2.ro
+RO PRIMA SPORT 3 -> primasport3.ro
+RO PRIMA SPORT 4 -> primasport4.ro
+RO EUROSPORT 1 -> eurosport1.ro
+RO EUROSPORT 2 -> eurosport2.ro
+AU ESPN -> espn.au
+AU ESPN 2 -> espn2.au
+AU beIN SPORTS 1 -> beinsports1.au
+AU beIN SPORTS 2 -> beinsports2.au
+AU beIN SPORTS 3 -> beinsports3.au
+AU FOX CRICKET -> foxcricket.au
+AU FOX FOOTY -> foxfooty.au
+AU FOX LEAGUE -> foxleague.au
+AU FOX SPORTS 503 -> foxsports503.au
+AU FOX SPORTS 505 -> foxsports505.au
+CA SPORTSNET 360 -> sportsnet360.ca
+CA SPORTSNET ONE -> sportsnetone.ca
+CA SPORTSNET EAST -> sportsneteast.ca
+CA SPORTSNET WORLD -> sportsnetworld.ca
+CA RDS -> rds.ca
+CA RDS2 -> rds2.ca
+CA ONE SOCCER -> onesoccer.ca
+CA THE FIGHT NETWORK -> thefightnetwork.ca
+CA beIN SPORTS -> beinsports.ca
+CA GOLF CHANNEL -> golfchannel.ca
+CZ NOVA SPORT 1 -> novasport1.cz
+CZ NOVA SPORT 2 -> novasport2.cz
+CZ NOVA SPORT 3 -> novasport3.cz
+CZ NOVA SPORT 4 -> novasport4.cz
+CZ NOVA SPORT 5 -> novasport5.cz
+CZ NOVA SPORT 6 -> novasport6.cz
+CZ PREMIER SPORT 1 -> premiersport1.cz
+CZ PREMIER SPORT 2 -> premiersport2.cz
+CZ PREMIER SPORT 3 -> premiersport3.cz
+CZ ONEPLAY SPORT 1 -> oneplaysport1.cz
+CZ ONEPLAY SPORT 2 -> oneplaysport2.cz
+CZ ONEPLAY SPORT 3 -> oneplaysport3.cz
+CZ ONEPLAY SPORT 4 -> oneplaysport4.cz
+CZ SPORT 1 -> sport1.cz
+CZ SPORT 2 -> sport2.cz
+CZ EUROSPORT 1 -> eurosport1.cz
+CZ EUROSPORT 2 -> eurosport2.cz
+CZ ČT SPORT -> ctsport.cz
+CZ CANAL+ SPORT -> canalplussport.cz
+SK NOVA SPORT 1 -> novasport1.sk
+SK NOVA SPORT 2 -> novasport2.sk
+SK NOVA SPORT 3 -> novasport3.sk
+SK NOVA SPORT 4 -> novasport4.sk
+SK NOVA SPORT 5 -> novasport5.sk
+SK NOVA SPORT 6 -> novasport6.sk
+SK PREMIER SPORT 1 -> premiersport1.sk
+SK PREMIER SPORT 2 -> premiersport2.sk
+SK PREMIER SPORT 3 -> premiersport3.sk
+SK JOJ ŠPORT -> jojsport.sk
+SK SPORT 1 -> sport1.sk
+SK SPORT 2 -> sport2.sk
+SK EUROSPORT 1 -> eurosport1.sk
+SK EUROSPORT 2 -> eurosport2.sk
+HU M4 SPORT -> m4sport.hu
+HU M4 SPORT+ -> m4sportplus.hu
+HU MATCH 4 -> match4.hu
+HU SPORT 1 -> sport1.hu
+HU SPORT 2 -> sport2.hu
+HU SPÍLER 1 TV -> spiler1.hu
+HU SPÍLER 2 TV -> spiler2.hu
+HU EUROSPORT 1 -> eurosport1.hu
+HU EUROSPORT 2 -> eurosport2.hu
+BG MAX SPORT 1 -> maxsport1.bg
+BG MAX SPORT 2 -> maxsport2.bg
+BG MAX SPORT 3 -> maxsport3.bg
+BG MAX SPORT 4 -> maxsport4.bg
+BG DIEMA SPORT -> diemasport.bg
+BG DIEMA SPORT 2 -> diemasport2.bg
+BG DIEMA SPORT 3 -> diemasport3.bg
+BG EUROSPORT 1 -> eurosport1.bg
+BG EUROSPORT 2 -> eurosport2.bg
+BG RING -> ring.bg
+DK TV 2 SPORT -> tv2sport.dk
+DK TV 2 SPORT X -> tv2sportx.dk
+DK TV3 SPORT -> tv3sport.dk
+DK VIAPLAY SPORT 1 -> viaplaysport1.dk
+DK VIAPLAY SPORT 2 -> viaplaysport2.dk
+DK VIAPLAY SPORT 3 -> viaplaysport3.dk
+DK EUROSPORT 1 -> eurosport1.dk
+DK EUROSPORT 2 -> eurosport2.dk
+DK SPORT LIVE -> sportlive.dk
+DK V SPORT GOLF -> vsportgolf.dk
+SE EUROSPORT 1 -> eurosport1.se
+SE EUROSPORT 2 -> eurosport2.se
+SE TV4 FOTBOLL -> tv4fotboll.se
+SE TV4 HOCKEY -> tv4hockey.se
+SE TV4 MOTOR -> tv4motor.se
+SE TV4 SPORT LIVE 1 -> tv4sportlive1.se
+SE TV4 SPORT LIVE 2 -> tv4sportlive2.se
+SE TV4 SPORT LIVE 3 -> tv4sportlive3.se
+SE TV4 SPORT LIVE 4 -> tv4sportlive4.se
+SE TV4 TENNIS -> tv4tennis.se
+SE V SPORT GOLF -> vsportgolf.se
+SE V SPORT FOTBOLL -> vsportfotboll.se
+SE V SPORT MOTOR -> vsportmotor.se
+NO TV 2 SPORT 1 -> tv2sport1.no
+NO TV 2 SPORT 2 -> tv2sport2.no
+NO TV 2 SPORT PREMIUM -> tv2sportpremium.no
+NO V SPORT 1 -> vsport1.no
+NO V SPORT 2 -> vsport2.no
+NO V SPORT 3 -> vsport3.no
+NO V SPORT+ -> vsportplus.no
+NO V SPORT PREMIER LEAGUE -> vsportpremierleague.no
+NO V SPORT PREMIER LEAGUE 1 -> vsportpremierleague1.no
+NO V SPORT PREMIER LEAGUE 2 -> vsportpremierleague2.no
+NO V SPORT PREMIER LEAGUE 3 -> vsportpremierleague3.no
+NO V SPORT PREMIER LEAGUE 4 -> vsportpremierleague4.no
+NO EUROSPORT 1 -> eurosport1.no
+NO EUROSPORT N -> eurosportn.no
+FI MTV URHEILU 1 -> mtvurheilu1.fi
+FI MTV URHEILU 2 -> mtvurheilu2.fi
+FI MTV URHEILU 3 -> mtvurheilu3.fi
+FI V SPORT 1 -> vsport1.fi
+FI V SPORT FOOTBALL -> vsportfootball.fi
+FI V SPORT GOLF -> vsportgolf.fi
+FI V SPORT PREMIUM -> vsportpremium.fi
+FI V SPORT LIVE 1 -> vsportlive1.fi
+FI V SPORT LIVE 2 -> vsportlive2.fi
+FI V SPORT LIVE 3 -> vsportlive3.fi
+FI VIAPLAY SPORT 1 -> viaplaysport1.fi
+FI VIAPLAY SPORT 2 -> viaplaysport2.fi
+FI VIAPLAY SPORT 3 -> viaplaysport3.fi
+FI EUROSPORT 1 -> eurosport1.fi
+FI EUROSPORT 2 -> eurosport2.fi
+TR A SPOR -> aspor.tr
+TR S SPORT -> ssport.tr
+TR S SPORT 2 -> ssport2.tr
+TR TİVİBU SPOR 1 -> tivibuspor1.tr
+TR TİVİBU SPOR 2 -> tivibuspor2.tr
+TR TİVİBU SPOR 3 -> tivibuspor3.tr
+TR TİVİBU SPOR 4 -> tivibuspor4.tr
+TR TRT SPOR -> trtspor.tr
+TR TRT SPOR YILDIZ -> trtsporyildiz.tr
+TR EUROSPORT 1 -> eurosport1.tr
+TR EUROSPORT 2 -> eurosport2.tr
+TR HT SPOR -> htspor.tr
+TR SPORTS TV -> sportstv.tr
+TR TABİİ SPOR -> tabiispor.tr
+US ESPN -> espn.us
+US ESPN 2 -> espn2.us
+US ESPNEWS -> espnews.us
+US ESPNU -> espnu.us
+US FS1 -> fs1.us
+US FS2 -> fs2.us
+US NFL NETWORK -> nflnetwork.us
+US NBA TV -> nbatv.us
+US MLB NETWORK -> mlbnetwork.us
+US NHL NETWORK -> nhlnetwork.us
+US GOLF CHANNEL -> golfchannel.us
+US TENNIS CHANNEL -> tennischannel.us
+US CBS SPORTS NETWORK -> cbssportsnetwork.us
+US BIG TEN NETWORK -> bigtennetwork.us
+US SEC NETWORK -> secnetwork.us
+US ACC NETWORK -> accnetwork.us
+US beIN SPORTS -> beinsports.us
+US TUDN -> tudn.us
+US FOX SOCCER PLUS -> foxsoccerplus.us

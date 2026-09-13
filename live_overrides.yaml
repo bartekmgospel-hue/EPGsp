@@ -1,0 +1,13 @@
+# Opcjonalna warstwa ręcznych poprawek.
+# Przydaje się, gdy zewnętrzna strona nie pokazuje wydarzenia albo chcesz wymusić opis.
+#
+# Przykład:
+# events:
+#   - channel_id: "sportklub1.hr"
+#     date: "2026-09-12"
+#     title: "Arsenal - Liverpool"
+#     league: "Premier League"
+#     sport: "football"
+#     live: true
+#
+events: []

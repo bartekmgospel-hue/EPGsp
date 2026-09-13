@@ -1,0 +1,212 @@
+pl:
+  replacements:
+    uživo: na żywo
+    uzivo: na żywo
+    direktno: na żywo
+    nogomet: piłka nożna
+    fudbal: piłka nożna
+    košarka: koszykówka
+    kosarka: koszykówka
+    rukomet: piłka ręczna
+    odbojka: siatkówka
+    hokej na ledu: hokej na lodzie
+    hokej: hokej
+    tenis: tenis
+    formula 1: Formuła 1
+    formula 2: Formuła 2
+    moto gp: MotoGP
+    motogp: MotoGP
+    atletika: lekkoatletyka
+    plivanje: pływanie
+    vaterpolo: piłka wodna
+    skijanje: narciarstwo
+    biciklizam: kolarstwo
+    boks: boks
+    finale: finał
+    polufinale: półfinał
+    četvrtfinale: ćwierćfinał
+    cetvrtfinale: ćwierćfinał
+    osmina finala: 1/8 finału
+    kvalifikacije: kwalifikacje
+    utakmica: mecz
+    pregled: podsumowanie
+    snimka: powtórka
+    repriza: powtórka
+    španjolska liga: liga hiszpańska
+    talijanska liga: liga włoska
+    engleska liga: liga angielska
+    njemačka liga: liga niemiecka
+    francuska liga: liga francuska
+    grčka liga: liga grecka
+    turska liga: liga turecka
+    futebol: piłka nożna
+    basquetebol: koszykówka
+    andebol: piłka ręczna
+    voleibol: siatkówka
+    hóquei: hokej
+    ténis: tenis
+    golfe: golf
+    motociclismo: motocykle
+    automobilismo: motorsport
+    qualificação: kwalifikacje
+    meias-finais: półfinały
+    quartos de final: ćwierćfinały
+    repetição: powtórka
+    fútbol: piłka nożna
+    baloncesto: koszykówka
+    balonmano: piłka ręczna
+    hockey: hokej
+    directo: na żywo
+    en vivo: na żywo
+    repetición: powtórka
+    semifinal: półfinał
+    cuartos de final: ćwierćfinały
+    fußball: piłka nożna
+    eishockey: hokej na lodzie
+    qualifikation: kwalifikacje
+    wiederholung: powtórka
+    halbfinale: półfinał
+    viertelfinale: ćwierćfinał
+    voetbal: piłka nożna
+    basketbal: koszykówka
+    ijshockey: hokej na lodzie
+    wielrennen: kolarstwo
+    kwalificatie: kwalifikacje
+    herhaling: powtórka
+    halve finale: półfinał
+    kwartfinale: ćwierćfinał
+    živě: na żywo
+    naživo: na żywo
+    záznam: powtórka
+    fotbal: piłka nożna
+    futbal: piłka nożna
+    házená: piłka ręczna
+    hádzaná: piłka ręczna
+    lední hokej: hokej na lodzie
+    ľadový hokej: hokej na lodzie
+    cyklistika: kolarstwo
+    labdarúgás: piłka nożna
+    kosárlabda: koszykówka
+    kézilabda: piłka ręczna
+    jégkorong: hokej na lodzie
+    élő: na żywo
+    ismétlés: powtórka
+    fodbold: piłka nożna
+    fotboll: piłka nożna
+    fotball: piłka nożna
+    jalkapallo: piłka nożna
+    håndbold: piłka ręczna
+    håndball: piłka ręczna
+    handboll: piłka ręczna
+    käsipallo: piłka ręczna
+    ishockey: hokej na lodzie
+    jääkiekko: hokej na lodzie
+    cykling: kolarstwo
+    sykling: kolarstwo
+    pyöräily: kolarstwo
+    repris: powtórka
+    genudsendelse: powtórka
+    uusinta: powtórka
+    suora: na żywo
+    futbol: piłka nożna
+    basketbol: koszykówka
+    voleybol: siatkówka
+    hentbol: piłka ręczna
+    canlı: na żywo
+    tekrar: powtórka
+    yarı final: półfinał
+    çeyrek final: ćwierćfinał
+en:
+  replacements:
+    uživo: live
+    uzivo: live
+    direktno: live
+    nogomet: football
+    fudbal: football
+    košarka: basketball
+    kosarka: basketball
+    rukomet: handball
+    odbojka: volleyball
+    hokej na ledu: ice hockey
+    hokej: hockey
+    tenis: tennis
+    formula 1: Formula 1
+    formula 2: Formula 2
+    moto gp: MotoGP
+    motogp: MotoGP
+    atletika: athletics
+    plivanje: swimming
+    vaterpolo: water polo
+    skijanje: skiing
+    biciklizam: cycling
+    boks: boxing
+    finale: final
+    polufinale: semifinal
+    četvrtfinale: quarterfinal
+    cetvrtfinale: quarterfinal
+    osmina finala: round of 16
+    kvalifikacije: qualifying
+    utakmica: match
+    pregled: highlights
+    snimka: replay
+    repriza: replay
+    futebol: football
+    basquetebol: basketball
+    andebol: handball
+    voleibol: volleyball
+    hóquei: hockey
+    ténis: tennis
+    golfe: golf
+    qualificação: qualifying
+    repetição: replay
+    fútbol: football
+    baloncesto: basketball
+    balonmano: handball
+    directo: live
+    en vivo: live
+    repetición: replay
+    fußball: football
+    eishockey: ice hockey
+    qualifikation: qualifying
+    wiederholung: replay
+    voetbal: football
+    basketbal: basketball
+    ijshockey: ice hockey
+    wielrennen: cycling
+    kwalificatie: qualifying
+    herhaling: replay
+    živě: live
+    naživo: live
+    záznam: replay
+    fotbal: football
+    futbal: football
+    házená: handball
+    hádzaná: handball
+    lední hokej: ice hockey
+    ľadový hokej: ice hockey
+    labdarúgás: football
+    kosárlabda: basketball
+    kézilabda: handball
+    jégkorong: ice hockey
+    élő: live
+    ismétlés: replay
+    fodbold: football
+    fotboll: football
+    fotball: football
+    jalkapallo: football
+    håndbold: handball
+    håndball: handball
+    handboll: handball
+    käsipallo: handball
+    ishockey: ice hockey
+    jääkiekko: ice hockey
+    repris: replay
+    genudsendelse: replay
+    uusinta: replay
+    suora: live
+    futbol: football
+    basketbol: basketball
+    voleybol: volleyball
+    hentbol: handball
+    canlı: live
+    tekrar: replay

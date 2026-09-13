@@ -1,0 +1,273 @@
+leagues:
+- key: uefa_champions_league
+  name: UEFA Champions League
+  sport: football
+  aliases:
+  - champions league
+  - uefa champions league
+  - liga prvaka
+  - ligue des champions
+  - liga mistrzów
+  - liga mistru
+  - şampiyonlar ligi
+- key: uefa_europa_league
+  name: UEFA Europa League
+  sport: football
+  aliases:
+  - europa league
+  - uefa europa league
+  - liga europy
+  - avrupa ligi
+- key: uefa_conference_league
+  name: UEFA Conference League
+  sport: football
+  aliases:
+  - conference league
+  - uefa conference league
+  - liga konferencji
+- key: premier_league
+  name: Premier League
+  sport: football
+  aliases:
+  - premier league
+  - english premier league
+  - premiership
+- key: la_liga
+  name: LaLiga
+  sport: football
+  aliases:
+  - la liga
+  - laliga
+  - primera division
+  - primera división
+- key: serie_a
+  name: Serie A
+  sport: football
+  aliases:
+  - serie a
+- key: bundesliga
+  name: Bundesliga
+  sport: football
+  aliases:
+  - bundesliga
+- key: ligue_1
+  name: Ligue 1
+  sport: football
+  aliases:
+  - ligue 1
+- key: eredivisie
+  name: Eredivisie
+  sport: football
+  aliases:
+  - eredivisie
+- key: ekstraklasa
+  name: Ekstraklasa
+  sport: football
+  aliases:
+  - ekstraklasa
+- key: liga_portugal
+  name: Liga Portugal
+  sport: football
+  aliases:
+  - liga portugal
+  - primeira liga
+- key: belgian_pro_league
+  name: Belgian Pro League
+  sport: football
+  aliases:
+  - pro league
+  - jupiler pro league
+  - belgian pro league
+- key: scottish_premiership
+  name: Scottish Premiership
+  sport: football
+  aliases:
+  - scottish premiership
+- key: mls
+  name: MLS
+  sport: football
+  aliases:
+  - major league soccer
+  - mls
+- key: libertadores
+  name: Copa Libertadores
+  sport: football
+  aliases:
+  - copa libertadores
+  - libertadores
+- key: fifa_world_cup
+  name: FIFA World Cup
+  sport: football
+  aliases:
+  - fifa world cup
+  - world cup
+  - mistrzostwa świata
+- key: uefa_nations_league
+  name: UEFA Nations League
+  sport: football
+  aliases:
+  - nations league
+  - uefa nations league
+- key: nba
+  name: NBA
+  sport: basketball
+  aliases:
+  - nba
+- key: wnba
+  name: WNBA
+  sport: basketball
+  aliases:
+  - wnba
+- key: euroleague
+  name: EuroLeague
+  sport: basketball
+  aliases:
+  - euroleague
+  - euro league basketball
+- key: eurocup
+  name: EuroCup
+  sport: basketball
+  aliases:
+  - eurocup
+- key: aba_league
+  name: ABA League
+  sport: basketball
+  aliases:
+  - aba league
+  - aba liga
+- key: ncaa_basketball
+  name: NCAA Basketball
+  sport: basketball
+  aliases:
+  - ncaa basketball
+  - college basketball
+- key: atp
+  name: ATP
+  sport: tennis
+  aliases:
+  - 'atp '
+- key: wta
+  name: WTA
+  sport: tennis
+  aliases:
+  - 'wta '
+- key: australian_open
+  name: Australian Open
+  sport: tennis
+  aliases:
+  - australian open
+- key: roland_garros
+  name: Roland Garros
+  sport: tennis
+  aliases:
+  - roland garros
+  - french open
+- key: wimbledon
+  name: Wimbledon
+  sport: tennis
+  aliases:
+  - wimbledon
+- key: us_open_tennis
+  name: US Open
+  sport: tennis
+  aliases:
+  - us open tennis
+  - us open
+- key: nhl
+  name: NHL
+  sport: hockey
+  aliases:
+  - nhl
+- key: shl
+  name: SHL
+  sport: hockey
+  aliases:
+  - swedish hockey league
+  - ' shl '
+- key: liiga
+  name: Liiga
+  sport: hockey
+  aliases:
+  - liiga
+- key: del
+  name: DEL
+  sport: hockey
+  aliases:
+  - deutsche eishockey liga
+  - ' del '
+  ambiguous_alias_require_terms:
+    del:
+    - hockey
+    - eishockey
+    - ice hockey
+    - hokej
+    - jégkorong
+    - ishockey
+    - jääkiekko
+- key: formula_1
+  name: Formula 1
+  sport: motorsport
+  aliases:
+  - formula 1
+  - formula one
+  - ' f1 '
+- key: formula_2
+  name: Formula 2
+  sport: motorsport
+  aliases:
+  - formula 2
+  - ' f2 '
+- key: formula_3
+  name: Formula 3
+  sport: motorsport
+  aliases:
+  - formula 3
+  - ' f3 '
+- key: motogp
+  name: MotoGP
+  sport: motorsport
+  aliases:
+  - motogp
+  - moto gp
+- key: wrc
+  name: WRC
+  sport: motorsport
+  aliases:
+  - world rally championship
+  - ' wrc '
+- key: nascar
+  name: NASCAR
+  sport: motorsport
+  aliases:
+  - nascar
+- key: indycar
+  name: IndyCar
+  sport: motorsport
+  aliases:
+  - indycar
+- key: ehf_champions_league
+  name: EHF Champions League
+  sport: handball
+  aliases:
+  - ehf champions league
+- key: cev_champions_league
+  name: CEV Champions League
+  sport: volleyball
+  aliases:
+  - cev champions league
+- key: vnl
+  name: Volleyball Nations League
+  sport: volleyball
+  aliases:
+  - volleyball nations league
+  - ' vnl '
+- key: six_nations
+  name: Six Nations
+  sport: rugby
+  aliases:
+  - six nations
+- key: ufc
+  name: UFC
+  sport: mma
+  aliases:
+  - ufc

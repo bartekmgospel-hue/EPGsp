@@ -1,0 +1,570 @@
+{
+  "version": 1,
+  "source": "real-user-builds-v3.13-v3.14",
+  "builds": [
+    {
+      "version": "3.13",
+      "generated_at_utc": "2026-09-13T07:28:15.050975+00:00",
+      "snapshot": {
+        "programmes": 16739,
+        "channels_total": 272,
+        "channels_matched": 272,
+        "channels_missing": 0,
+        "channels_active": 255,
+        "channels_empty": 17,
+        "quality_average": 98.9,
+        "external_live": 101,
+        "external_live_high": 88,
+        "external_live_medium": 13,
+        "external_channels_with_events": 32,
+        "external_channels_current": 25,
+        "external_channels_fresh_cache": 7,
+        "external_channels_stale_cache": 0,
+        "external_channels_event_lkg": 0,
+        "external_channels_unavailable": 0,
+        "external_data_age_max_hours": 0.024,
+        "external_data_age_avg_hours": 0.003,
+        "source_degraded": 1,
+        "source_unavailable": 0,
+        "source_salvaged_feeds": 1,
+        "source_coverage_warnings": 4,
+        "verified_fallbacks_applied": 1,
+        "channel_lkg_recoveries": 0,
+        "external_same_channel_event_reuse": 0,
+        "external_duplicate_event_matches": 0,
+        "version": "3.13",
+        "generated_at_utc": "2026-09-13T07:28:15.050975+00:00",
+        "external_events_found": 207,
+        "external_network_failures": 0,
+        "sources": {
+          "sportklub": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 829,
+            "source_channels": 16
+          },
+          "arena_rs": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 83138,
+            "source_channels": 721
+          },
+          "portugal": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 21903,
+            "source_channels": 178
+          },
+          "belgium": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 62450,
+            "source_channels": 571
+          },
+          "austria": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 17968,
+            "source_channels": 144
+          },
+          "germany": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 23074,
+            "source_channels": 266
+          },
+          "netherlands": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 23014,
+            "source_channels": 159
+          },
+          "switzerland": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 87532,
+            "source_channels": 751
+          },
+          "spain": {
+            "ok": true,
+            "current_ok": false,
+            "health": "degraded",
+            "degraded": true,
+            "coverage_pct": 0.0,
+            "source_programmes": 15950,
+            "source_channels": 373
+          },
+          "united_kingdom": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 41120,
+            "source_channels": 486
+          },
+          "italy": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 83.3,
+            "source_programmes": 19887,
+            "source_channels": 193
+          },
+          "france": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 88.9,
+            "source_programmes": 69339,
+            "source_channels": 574
+          },
+          "poland": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 107227,
+            "source_channels": 636
+          },
+          "greece": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 24809,
+            "source_channels": 318
+          },
+          "romania": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 38401,
+            "source_channels": 361
+          },
+          "australia": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 59086,
+            "source_channels": 354
+          },
+          "canada": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 68127,
+            "source_channels": 696
+          },
+          "czechia": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 52424,
+            "source_channels": 1087
+          },
+          "slovakia": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 92.9,
+            "source_programmes": 21161,
+            "source_channels": 217
+          },
+          "hungary": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 21817,
+            "source_channels": 193
+          },
+          "bulgaria": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 7325,
+            "source_channels": 86
+          },
+          "denmark": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 13411,
+            "source_channels": 217
+          },
+          "sweden": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 13687,
+            "source_channels": 126
+          },
+          "norway": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 35.7,
+            "source_programmes": 14827,
+            "source_channels": 161
+          },
+          "finland": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 80.0,
+            "source_programmes": 10405,
+            "source_channels": 110
+          },
+          "turkey": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 32238,
+            "source_channels": 287
+          },
+          "usa": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 79010,
+            "source_channels": 766
+          }
+        }
+      },
+      "source": "report(20260913-073028).json"
+    },
+    {
+      "version": "3.14",
+      "generated_at_utc": "2026-09-13T07:51:39.131531+00:00",
+      "snapshot": {
+        "programmes": 16739,
+        "channels_total": 272,
+        "channels_matched": 272,
+        "channels_missing": 0,
+        "channels_active": 255,
+        "channels_empty": 17,
+        "quality_average": 98.9,
+        "external_live": 101,
+        "external_live_high": 88,
+        "external_live_medium": 13,
+        "external_channels_with_events": 32,
+        "external_channels_current": 0,
+        "external_channels_fresh_cache": 32,
+        "external_channels_stale_cache": 0,
+        "external_channels_event_lkg": 0,
+        "external_channels_unavailable": 0,
+        "external_data_age_max_hours": 0.41,
+        "external_data_age_avg_hours": 0.39,
+        "source_degraded": 1,
+        "source_unavailable": 0,
+        "source_salvaged_feeds": 1,
+        "source_coverage_warnings": 4,
+        "verified_fallbacks_applied": 1,
+        "channel_lkg_recoveries": 0,
+        "external_same_channel_event_reuse": 0,
+        "external_duplicate_event_matches": 0,
+        "version": "3.14",
+        "generated_at_utc": "2026-09-13T07:51:39.131531+00:00",
+        "external_events_found": 207,
+        "external_network_failures": 0,
+        "sources": {
+          "sportklub": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 829,
+            "source_channels": 16
+          },
+          "arena_rs": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 83138,
+            "source_channels": 721
+          },
+          "portugal": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 21903,
+            "source_channels": 178
+          },
+          "belgium": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 62450,
+            "source_channels": 571
+          },
+          "austria": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 17968,
+            "source_channels": 144
+          },
+          "germany": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 23074,
+            "source_channels": 266
+          },
+          "netherlands": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 23014,
+            "source_channels": 159
+          },
+          "switzerland": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 87532,
+            "source_channels": 751
+          },
+          "spain": {
+            "ok": true,
+            "current_ok": false,
+            "health": "degraded",
+            "degraded": true,
+            "coverage_pct": 0.0,
+            "source_programmes": 15950,
+            "source_channels": 373
+          },
+          "united_kingdom": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 41120,
+            "source_channels": 486
+          },
+          "italy": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 83.3,
+            "source_programmes": 19887,
+            "source_channels": 193
+          },
+          "france": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 88.9,
+            "source_programmes": 69339,
+            "source_channels": 574
+          },
+          "poland": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 107227,
+            "source_channels": 636
+          },
+          "greece": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 24809,
+            "source_channels": 318
+          },
+          "romania": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 38401,
+            "source_channels": 361
+          },
+          "australia": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 59086,
+            "source_channels": 354
+          },
+          "canada": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 68127,
+            "source_channels": 696
+          },
+          "czechia": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 52424,
+            "source_channels": 1087
+          },
+          "slovakia": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 92.9,
+            "source_programmes": 21161,
+            "source_channels": 217
+          },
+          "hungary": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 21817,
+            "source_channels": 193
+          },
+          "bulgaria": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 7325,
+            "source_channels": 86
+          },
+          "denmark": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 13411,
+            "source_channels": 217
+          },
+          "sweden": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 13687,
+            "source_channels": 126
+          },
+          "norway": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 35.7,
+            "source_programmes": 14827,
+            "source_channels": 161
+          },
+          "finland": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy_with_gaps",
+            "degraded": false,
+            "coverage_pct": 80.0,
+            "source_programmes": 10405,
+            "source_channels": 110
+          },
+          "turkey": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 32238,
+            "source_channels": 287
+          },
+          "usa": {
+            "ok": true,
+            "current_ok": true,
+            "health": "healthy",
+            "degraded": false,
+            "coverage_pct": 100.0,
+            "source_programmes": 79010,
+            "source_channels": 766
+          }
+        }
+      },
+      "source": "report(20260913-080235).json"
+    }
+  ]
+}

@@ -1,0 +1,1896 @@
+settings:
+  target_language: pl
+  live_detection: external_first
+  add_live_prefix: true
+  add_replay_prefix: true
+  add_stage_prefix: true
+  add_sport_prefix: true
+  use_emoji: true
+  preserve_original_title: true
+  keep_original_descriptions: true
+  external_live_min_score: 0.6
+  external_live_date_tolerance_days: 1
+  output_xml: docs/sports_epg.xml
+  output_gz: docs/sports_epg.xml.gz
+  report_file: docs/report.json
+  status_file: docs/status.html
+  generator_name: Bartosz Sports EPG v3.17
+  fail_on_missing_channels: false
+  external_live_time_tolerance_minutes: 150
+  external_live_min_title_score: 0.3
+  external_live_high_confidence: 0.78
+  debug_provenance_in_desc: false
+  add_league_category: true
+  deduplicate_exact_programmes: true
+  quality_gap_warning_minutes: 180
+  quality_overlap_warning_minutes: 5
+  quality_low_programme_threshold: 8
+  quality_score_warn_below: 75
+  quality_report_file: docs/quality_report.json
+  live_matches_file: docs/live_matches.json
+  quality_use_wall_clock_for_mixed_offsets: true
+  quality_mixed_offset_overlap_ratio: 0.5
+  active_requires_programmes: true
+  fail_on_empty_channels: false
+  source_prefer_nonempty_candidate: true
+  external_live_use_description: true
+  external_live_entity_min_overlap: 2
+  source_autodiscovery_enabled: true
+  source_autodiscovery_min_score: 0.86
+  source_autodiscovery_max_suggestions: 5
+  mixed_offset_cleanup_enabled: true
+  mixed_offset_cleanup_min_overlaps: 8
+  mixed_offset_cleanup_min_group_ratio: 0.2
+  mixed_offset_cleanup_prefer_source_timezone: true
+  empty_channels_file: docs/empty_channels.json
+  external_live_reject_risky: true
+  external_live_risky_score_below: 0.66
+  live_audit_file: docs/live_audit.json
+  source_recommendations_file: docs/source_recommendations.json
+  sportguide_catalog_file: docs/sportguide_catalog.json
+  external_live_one_to_one: true
+  external_live_event_reuse_allowed: false
+  catalog_brand_match_required: true
+  source_recommendation_brand_required: true
+  source_recommendation_strict_numbers: true
+  source_recommendation_min_score: 0.68
+  source_recommendation_require_critical_descriptors: true
+  source_recommendation_auto_apply: false
+  external_live_one_to_one_scope: channel
+  external_live_dedupe_events: true
+  source_recommendation_strict_variants: true
+  source_recommendation_schedule_consensus: true
+  source_recommendation_schedule_consensus_moderate: 0.35
+  source_recommendation_schedule_consensus_strong: 0.6
+  source_recommendation_schedule_consensus_method: fingerprint
+  source_recommendation_fingerprint_pair_min_score: 0.62
+  source_recommendation_fingerprint_time_tolerance_minutes: 360
+  source_recommendation_fingerprint_min_evidence: 4
+  source_recommendation_fingerprint_max_items: 220
+  source_recommendation_schedule_verified_identity_score: 0.95
+  source_fetch_retries: 3
+  source_fetch_retry_backoff_seconds: 2.0
+  source_request_timeout_seconds: 75
+  source_cache_enabled: true
+  source_cache_dir: .cache/xmltv_sources
+  source_cache_max_age_hours: 168
+  source_cache_use_stale_if_all_fail: true
+  source_salvage_truncated_xml: true
+  source_recommendation_fingerprint_same_slot_tolerance_minutes: 45
+  source_recommendation_fingerprint_repeat_min_delay_minutes: 60
+  source_recommendation_fingerprint_repeat_max_delay_minutes: 360
+  source_salvage_after_retries: true
+  source_prefer_fresh_cache_before_salvage: true
+  source_salvage_merge_stale_cache_missing_channels: true
+  source_recovery_file: docs/source_recovery.json
+  verified_fallback_enabled: true
+  verified_fallback_min_identity_score: 0.95
+  verified_fallback_min_schedule_consensus: 0.9
+  verified_fallback_min_same_slot_matches: 20
+  verified_fallback_report_file: docs/verified_fallbacks.json
+  source_degraded_configured_coverage_threshold_pct: 90.0
+  source_degraded_mark_current_low_coverage_as_warning: true
+  channel_lkg_enabled: true
+  channel_lkg_dir: .cache/channel_lkg
+  channel_lkg_max_age_hours: 48
+  channel_lkg_recover_when_source_degraded: true
+  channel_lkg_recent_grace_hours: 6
+  channel_lkg_min_programmes: 1
+  channel_recovery_file: docs/channel_recovery.json
+  recommendation_history_enabled: true
+  recommendation_history_file: .cache/recommendation_history.json
+  recommendation_history_max_builds: 12
+  recommendation_history_required_builds: 3
+  recommendation_history_min_consensus: 0.6
+  recommendation_history_min_identity_score: 0.95
+  recommendation_history_min_same_slot_matches: 20
+  fallback_promotion_file: docs/fallback_promotion_candidates.json
+  external_live_recovery_file: docs/external_live_recovery.json
+  cache_bootstrap_previous_versions: true
+  cache_bootstrap_max_versions: 4
+  health_monitor_enabled: true
+  health_history_file: .cache/build_history.json
+  health_report_file: docs/build_health.json
+  health_history_max_builds: 30
+  health_external_live_drop_warn_pct: 30.0
+  health_external_live_drop_critical_pct: 60.0
+  health_external_channels_drop_warn_pct: 30.0
+  health_external_channels_drop_critical_pct: 60.0
+  health_channels_matched_drop_critical: 1
+  health_channels_active_drop_warn: 2
+  health_quality_drop_warn: 1.0
+  health_source_degraded_increase_warn: 1
+  health_network_failures_warn: 5
+  health_network_failures_critical: 20
+  health_external_data_age_warn_hours: 6.0
+  health_external_data_age_critical_hours: 12.0
+  health_source_programme_drop_warn_pct: 50.0
+  health_source_coverage_drop_warn_points: 20.0
+  health_fail_on_critical: false
+  health_seed_baseline_file: build_health_seed.json
+  health_score_enabled: true
+  health_trend_enabled: true
+  health_trend_window_builds: 5
+  health_trend_min_builds: 3
+  health_trend_seed_file: build_health_trend_seed.json
+  health_trend_report_file: docs/build_trends.json
+  health_trend_external_live_watch_pct: 15.0
+  health_trend_external_channels_watch_pct: 15.0
+  health_trend_active_drop_watch: 1
+  health_trend_quality_drop_watch: 0.5
+  health_trend_network_failures_watch: 5
+  health_trend_data_age_watch_hours: 3.0
+  health_trend_persistent_points: 2
+  health_trend_alert_persistent: true
+  health_legacy_history_file: .cache/build_health_history.json
+  health_unified_seed_file: build_history_seed.json
+  health_history_report_file: docs/build_history.json
+  health_trend_confidence_enabled: true
+  health_trend_confidence_medium_builds: 3
+  health_trend_confidence_high_builds: 5
+  health_trend_confidence_high_score: 85
+  health_trend_confidence_medium_score: 55
+  health_score_single_anomaly_penalty_enabled: true
+  health_score_single_anomaly_penalty_low: 1
+  health_score_single_anomaly_penalty_medium: 4
+  health_score_single_anomaly_penalty_high: 7
+  health_score_single_anomaly_penalty_max: 12
+sources:
+  sportklub:
+    url: https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz
+    timezone: Europe/Zagreb
+    sportguide_country: cro
+  arena_rs:
+    url: https://epgshare01.online/epgshare01/epg_ripper_RS1.xml.gz
+    timezone: Europe/Belgrade
+    sportguide_country: rs
+  portugal:
+    url: https://epgshare01.online/epgshare01/epg_ripper_PT1.xml.gz
+    timezone: Europe/Lisbon
+    sportguide_country: pt
+  belgium:
+    url: https://epgshare01.online/epgshare01/epg_ripper_BE2.xml.gz
+    timezone: Europe/Brussels
+    sportguide_country: be
+  austria:
+    url: https://epgshare01.online/epgshare01/epg_ripper_AT1.xml.gz
+    timezone: Europe/Vienna
+    sportguide_country: at
+  germany:
+    url: https://epgshare01.online/epgshare01/epg_ripper_DE1.xml.gz
+    timezone: Europe/Berlin
+    sportguide_country: de
+  netherlands:
+    url: https://epgshare01.online/epgshare01/epg_ripper_NL1.xml.gz
+    timezone: Europe/Amsterdam
+    sportguide_country: nl
+  switzerland:
+    url: https://epgshare01.online/epgshare01/epg_ripper_CH1.xml.gz
+    timezone: Europe/Zurich
+    sportguide_country: ch
+  spain:
+    url: https://epgshare01.online/epgshare01/epg_ripper_ES1.xml.gz
+    timezone: Europe/Madrid
+    sportguide_country: es
+  united_kingdom:
+    url: https://epgshare01.online/epgshare01/epg_ripper_UK1.xml.gz
+    timezone: Europe/London
+    sportguide_country: uk
+  italy:
+    url: https://epgshare01.online/epgshare01/epg_ripper_IT1.xml.gz
+    timezone: Europe/Rome
+    sportguide_country: it
+  france:
+    url: https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz
+    timezone: Europe/Paris
+    sportguide_country: fr
+  poland:
+    url: https://epgshare01.online/epgshare01/epg_ripper_PL1.xml.gz
+    timezone: Europe/Warsaw
+    sportguide_country: pl
+  greece:
+    url: https://epgshare01.online/epgshare01/epg_ripper_GR1.xml.gz
+    timezone: Europe/Athens
+    sportguide_country: gr
+  romania:
+    url: https://epgshare01.online/epgshare01/epg_ripper_RO1.xml.gz
+    timezone: Europe/Bucharest
+    sportguide_country: ro
+  australia:
+    url: https://epgshare01.online/epgshare01/epg_ripper_AU1.xml.gz
+    timezone: Australia/Sydney
+    sportguide_country: au
+  canada:
+    url: https://epgshare01.online/epgshare01/epg_ripper_CA2.xml.gz
+    timezone: America/Toronto
+    sportguide_country: ca
+  czechia:
+    url: https://epgshare01.online/epgshare01/epg_ripper_CZ1.xml.gz
+    timezone: Europe/Prague
+    sportguide_country: cz
+  slovakia:
+    url: https://epgshare01.online/epgshare01/epg_ripper_SK1.xml.gz
+    timezone: Europe/Bratislava
+    sportguide_country: sk
+  hungary:
+    url: https://epgshare01.online/epgshare01/epg_ripper_HU1.xml.gz
+    timezone: Europe/Budapest
+    sportguide_country: hu
+  bulgaria:
+    url: https://epgshare01.online/epgshare01/epg_ripper_BG1.xml.gz
+    timezone: Europe/Sofia
+    sportguide_country: bg
+  denmark:
+    url: https://epgshare01.online/epgshare01/epg_ripper_DK1.xml.gz
+    timezone: Europe/Copenhagen
+    sportguide_country: dk
+  sweden:
+    url: https://epgshare01.online/epgshare01/epg_ripper_SE1.xml.gz
+    timezone: Europe/Stockholm
+    sportguide_country: se
+  norway:
+    url: https://epgshare01.online/epgshare01/epg_ripper_NO1.xml.gz
+    timezone: Europe/Oslo
+    sportguide_country: 'no'
+  finland:
+    url: https://epgshare01.online/epgshare01/epg_ripper_FI1.xml.gz
+    timezone: Europe/Helsinki
+    sportguide_country: fi
+  turkey:
+    url: https://epgshare01.online/epgshare01/epg_ripper_TR3.xml.gz
+    timezone: Europe/Istanbul
+    sportguide_country: tr
+  usa:
+    url: https://epgshare01.online/epgshare01/epg_ripper_US2.xml.gz
+    timezone: America/New_York
+    sportguide_country: us
+external_live:
+  enabled: true
+  provider: sportguide
+  request_timeout_seconds: 30
+  pause_between_requests_seconds: 0.2
+  user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0 Safari/537.36 SportsEPG/3.13
+  cache_dir: .cache/sportguide
+  cache_ttl_minutes: 60
+  accept_language: en-US,en;q=0.9
+  try_station_alias: true
+  continue_on_empty_page: true
+  autodiscover_enabled: true
+  autodiscover_max_channels: 0
+  autodiscover_max_candidates: 2
+  autodiscover_network_keywords:
+  - sky
+  - tnt
+  - eurosport
+  - canal
+  - eleven
+  - polsat
+  - dazn
+  - bein
+  - cosmote
+  - nova sport
+  - novasports
+  - digi sport
+  - prima sport
+  - espn
+  - fox sport
+  - sportsnet
+  - sport tv
+  - arena sport
+  - sportklub
+  - tv 2 sport
+  - v sport
+  - viaplay
+  - s sport
+  - tivibu
+  - trt sport
+  - max sport
+  - diema sport
+  - m4 sport
+  - sport 1
+  - sport 2
+  catalog_enabled: true
+  catalog_cache_file: .cache/sportguide_catalog.json
+  catalog_min_score: 0.7
+  catalog_refresh_hours: 168
+  legacy_slug_fallback: false
+  catalog_seed_urls:
+  - country: pl
+    label: CANAL+ Sport
+    url: https://sport-tv-guide.live/station/pl-canal-sport
+  - country: uk
+    label: Sky Sports Main Event
+    url: https://sport-tv-guide.live/station/sky-sports-main-event
+  - country: it
+    label: Sky Sport Serie A
+    url: https://sport-tv-guide.live/station/sky-sport-serie-a
+  - country: de
+    label: Sky Sport Top Event
+    url: https://sport-tv-guide.live/station/sky-sport-top-event
+  - country: fr
+    label: La Une
+    url: https://sport-tv-guide.live/station/la-une
+  - country: gr
+    label: Cosmote Sport 1
+    url: https://sport-tv-guide.live/station/cosmote-sport-1
+  - country: cz
+    label: Eurosport 1
+    url: https://sport-tv-guide.live/station/cz-eurosport-1
+  - country: se
+    label: Eurosport 1
+    url: https://sport-tv-guide.live/station/se-eurosport-1
+  catalog_brand_match_required: true
+  catalog_strict_numbers: true
+  catalog_strict_variants: true
+  dedupe_events: true
+  request_retries: 2
+  request_retry_backoff_seconds: 0.5
+  use_stale_page_cache_on_network_error: true
+  stale_page_cache_max_age_hours: 24
+  event_cache_enabled: true
+  event_cache_dir: .cache/sportguide_events
+  event_cache_max_age_hours: 24
+  event_cache_fallback_on_network_error: true
+  catalog_lkg_max_age_hours: 168
+  preserve_catalog_map_on_network_error: true
+channels:
+- name: HR Sportklub 1
+  id: sportklub1.hr
+  source: sportklub
+  source_ids:
+  - SK.1.HD.(HR).ba
+  - SK1.ba
+  - SK1.BiH.ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-1
+- name: HR Sportklub 2
+  id: sportklub2.hr
+  source: sportklub
+  source_ids:
+  - SK.2.HR.(Portals).ba
+  - SK2.ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-2
+- name: HR Sportklub 3
+  id: sportklub3.hr
+  source: sportklub
+  source_ids:
+  - SK.3.HR.(Portals).ba
+  - SK3.ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-3
+- name: HR Sportklub 4
+  id: sportklub4.hr
+  source: sportklub
+  source_ids:
+  - SK.4.HD.HR.(Portals).ba
+  - SK.4.HR.(Portals).ba
+  - SK4.ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-4
+- name: HR Sportklub 5
+  id: sportklub5.hr
+  source: sportklub
+  source_ids:
+  - SK.5.HD.HR.(Portal).ba
+  - SK.5.HR.(Portals).ba
+  - SK5.ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-5
+- name: HR Sportklub 6
+  id: sportklub6.hr
+  source: sportklub
+  source_ids:
+  - SK.6.HR.(Portals).ba
+  - SK6.ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-6
+- name: HR Sportklub 7
+  id: sportklub7.hr
+  source: sportklub
+  source_ids:
+  - SK.7.HD.(HR).ba
+  - SK7.ba
+  - SK.7.HD.(SR).ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-7
+- name: HR Sportklub 8
+  id: sportklub8.hr
+  source: sportklub
+  source_ids:
+  - SK.8.HD.(HR).ba
+  - SK8.ba
+  - SK.8.HD.(SR).ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-8
+- name: HR Sportklub 9
+  id: sportklub9.hr
+  source: sportklub
+  source_ids:
+  - SK.9.HD.(HR).ba
+  - SK9.ba
+  - SK.9.HD.(SR).ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-9
+- name: HR Sportklub 10
+  id: sportklub10.hr
+  source: sportklub
+  source_ids:
+  - SK.10.HD.(HR).ba
+  - SK10.ba
+  - SK.10.HD.(SR).ba
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-10
+- name: SR Arena Sport 1
+  id: arenasport1.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.1.HD.(RS).rs
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-1
+- name: SR Arena Sport 2
+  id: arenasport2.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.2.HD.(RS).rs
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-2
+- name: SR Arena Sport 3
+  id: arenasport3.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.3.HD.(RS).rs
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-3
+- name: SR Arena Sport 4
+  id: arenasport4.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.4.HD.(RS).rs
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-4
+- name: SR Arena Sport 5
+  id: arenasport5.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.5.HD.(RS).rs
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-5
+- name: PT SPORT TV 1
+  id: sporttv1.pt
+  source: portugal
+  source_ids:
+  - SPORT.TV1.HD.pt
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/pt-sport-tv-1
+- name: PT SPORT TV 2
+  id: sporttv2.pt
+  source: portugal
+  source_ids:
+  - SPORT.TV2.HD.pt
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/pt-sport-tv-2
+- name: PT SPORT TV 3
+  id: sporttv3.pt
+  source: portugal
+  source_ids:
+  - SPORT.TV3.HD.pt
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/pt-sport-tv-3
+- name: PT SPORT TV 4
+  id: sporttv4.pt
+  source: portugal
+  source_ids:
+  - SPORT.TV4.HD.pt
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/sport-tv-4
+- name: PT SPORT TV 5
+  id: sporttv5.pt
+  source: portugal
+  source_ids:
+  - SPORT.TV5.HD.pt
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/sport-tv-5
+- name: PT SPORT TV+
+  id: sporttvplus.pt
+  source: portugal
+  source_ids:
+  - SPORT.TV+.HD.pt
+  - S+.HD.pt
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/sport-tv
+- name: BE ELEVEN PRO LEAGUE 1
+  id: elevenproleague1.be
+  source: belgium
+  source_ids:
+  - DAZN.Pro.League.1.be
+  - Eleven.Pro.League.1.be
+  - Eleven.JPL.1.be
+  external_live_urls:
+  - https://sport-tv-guide.live/station/eleven-pro-league-1
+- name: BE ELEVEN PRO LEAGUE 2
+  id: elevenproleague2.be
+  source: belgium
+  source_ids:
+  - DAZN.Pro.League.2.be
+  - Eleven.Pro.League.2.be
+  - Eleven.JPL.2.be
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/eleven-pro-league-2
+- name: AT SKY SPORT AUSTRIA 1
+  id: skysportaustria1.at
+  source: austria
+  source_ids:
+  - SKYSPOAUSTRIA.at
+  - Sky.Sport.Austria.1.at
+  fallback_sources:
+  - source: germany
+    source_ids:
+    - Sky.Sport.Austria.1.HD.de
+    - Sky.Sport.Austria.1.de
+  external_live_urls:
+  - https://sport-tv-guide.live/station/sky-sport-austria
+- name: SR ARENA SPORT PREMIUM 1
+  id: arenapremium1.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Premium.1.HD.(RS).rs
+  - Arena.PREMIUM.1.rs
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/rs-arena-premium-1
+- name: SR ARENA SPORT PREMIUM 2
+  id: arenapremium2.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Premium.2.HD.(RS).rs
+  - Arena.PREMIUM.2.rs
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/rs-arena-premium-2
+- name: SR ARENA SPORT PREMIUM 3
+  id: arenapremium3.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Premium.3.HD.(RS).rs
+  - Arena.PREMIUM.3.rs
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/rs-arena-premium-3
+  - https://sport-tv-guide.live/sr/tv-program-uzivo/rs-arena-premium-3
+- name: NL ESPN 2
+  id: espn2.nl
+  source: netherlands
+  source_ids:
+  - ESPN.2.nl
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/nl-espn-2
+  - https://sport-tv-guide.live/nl/tv-gids-live/nl-espn-2
+- name: CH BLUE SPORT 1
+  id: bluesport1.ch
+  source: switzerland
+  source_ids:
+  - blue.Sport.1.Live.ch
+  - blue.Sport.1.direct.ch
+  - blue.Sport.1.Live.D.ch
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/blue-sport-1
+- name: CH BLUE SPORT 2
+  id: bluesport2.ch
+  source: switzerland
+  source_ids:
+  - blue.Sport.2.Live.ch
+  - blue.Sport.2.direct.ch
+  - blue.Sport.2.Live.D.ch
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/blue-sport-2
+- name: ES MOVISTAR LIGA DE CAMPEONES 1
+  id: movistarligadecampeones1.es
+  source: spain
+  source_ids:
+  - M+.Liga.de.Campeones.es
+  - Movistar.Liga.de.Campeones.es
+  - M+.Liga.de.Campeones.HDR.es
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/moviestar-liga-de-campeones
+  - https://sport-tv-guide.live/nl/tv-gids-live/moviestar-liga-de-campeones
+- name: ES MOVISTAR LIGA DE CAMPEONES 2
+  id: movistarligadecampeones2.es
+  source: spain
+  source_ids:
+  - M+.Liga.de.Campeones.2.es
+  - Movistar.Liga.de.Campeones.2.es
+  - M+.Liga.de.Campeones2.HDR.es
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/moviestar-liga-de-campeones-2
+  - https://sport-tv-guide.live/sq/guida-tv-live/moviestar-liga-de-campeones-2
+- name: PL CANAL+ SPORT
+  id: canalplussport.pl
+  source: poland
+  source_ids:
+  - CANAL+.Sport.HD.pl
+  - CANAL+.Sport.pl
+- name: PL CANAL+ SPORT 2
+  id: canalplussport2.pl
+  source: poland
+  source_ids:
+  - CANAL+.Sport.2.HD.pl
+  - CANAL+.Sport.2.pl
+- name: PL CANAL+ SPORT 3
+  id: canalplussport3.pl
+  source: poland
+  source_ids:
+  - CANAL+.Sport.3.HD.pl
+  - CANAL+.Sport.3.pl
+- name: PL CANAL+ SPORT 4
+  id: canalplussport4.pl
+  source: poland
+  source_ids:
+  - CANAL+.Sport.4.HD.pl
+  - CANAL+.Sport.4.pl
+- name: PL CANAL+ SPORT 5
+  id: canalplussport5.pl
+  source: poland
+  source_ids:
+  - CANAL+.Sport.5.HD.pl
+  - CANAL+.Sport.5.pl
+- name: PL ELEVEN SPORTS 1
+  id: elevensports1.pl
+  source: poland
+  source_ids:
+  - Eleven.Sports.1.HD.pl
+  - Eleven.Sports.1.4K.pl
+  - Eleven.Sports.1.pl
+- name: PL ELEVEN SPORTS 2
+  id: elevensports2.pl
+  source: poland
+  source_ids:
+  - Eleven.Sports.2.HD.pl
+  - Eleven.Sports.2.pl
+- name: PL ELEVEN SPORTS 3
+  id: elevensports3.pl
+  source: poland
+  source_ids:
+  - Eleven.Sports.3.HD.pl
+  - Eleven.Sports.3.pl
+- name: PL ELEVEN SPORTS 4
+  id: elevensports4.pl
+  source: poland
+  source_ids:
+  - Eleven.Sports.4.HD.pl
+  - Eleven.Sports.4.pl
+- name: PL EUROSPORT 1
+  id: eurosport1.pl
+  source: poland
+  source_ids:
+  - Eurosport.1.HD.pl
+  - Eurosport.1.pl
+- name: PL EUROSPORT 2
+  id: eurosport2.pl
+  source: poland
+  source_ids:
+  - Eurosport.2.HD.pl
+  - Eurosport.2.pl
+- name: PL POLSAT SPORT
+  id: polsatsport.pl
+  source: poland
+  source_ids:
+  - Polsat.Sport.HD.pl
+  - Polsat.Sport.pl
+- name: PL POLSAT SPORT EXTRA
+  id: polsatsportextra.pl
+  source: poland
+  source_ids:
+  - Polsat.Sport.Extra.HD.pl
+  - Polsat.Sport.Extra.pl
+- name: PL POLSAT SPORT FIGHT
+  id: polsatsportfight.pl
+  source: poland
+  source_ids:
+  - Polsat.Sport.Fight.HD.pl
+  - Polsat.Sport.Fight.pl
+- name: PL POLSAT SPORT PREMIUM 1
+  id: polsatsportpremium1.pl
+  source: poland
+  source_ids:
+  - Polsat.Sport.Premium.1.pl
+- name: PL POLSAT SPORT PREMIUM 2
+  id: polsatsportpremium2.pl
+  source: poland
+  source_ids:
+  - Polsat.Sport.Premium.2.pl
+- name: UK SKY SPORTS MAIN EVENT
+  id: skysportsmainevent.uk
+  source: united_kingdom
+  source_ids:
+  - SkySpMainEvHD.uk
+- name: UK SKY SPORTS PREMIER LEAGUE
+  id: skysportspremierleague.uk
+  source: united_kingdom
+  source_ids:
+  - SkySp.PL.HD.uk
+- name: UK SKY SPORTS FOOTBALL
+  id: skysportsfootball.uk
+  source: united_kingdom
+  source_ids:
+  - Sky.Sports.Football.HD.uk
+  - SkySp.Fball.HD.uk
+- name: UK SKY SPORTS F1
+  id: skysportsf1.uk
+  source: united_kingdom
+  source_ids:
+  - SkySp.F1.HD.uk
+  - SkySp.F1.uk
+- name: UK SKY SPORTS CRICKET
+  id: skysportscricket.uk
+  source: united_kingdom
+  source_ids:
+  - SkySpCricket.HD.uk
+  - SkySp.Cricket.uk
+- name: UK SKY SPORTS GOLF
+  id: skysportsgolf.uk
+  source: united_kingdom
+  source_ids:
+  - SkySp.Golf.HD.uk
+  - SkySp.Golf.uk
+- name: UK SKY SPORTS TENNIS
+  id: skysportstennis.uk
+  source: united_kingdom
+  source_ids:
+  - SkySp.Tennis.HD.uk
+- name: UK SKY SPORTS ACTION
+  id: skysportsaction.uk
+  source: united_kingdom
+  source_ids:
+  - SkySp.ActionHD.uk
+  - SkySp.Action.uk
+- name: UK SKY SPORTS NEWS
+  id: skysportsnews.uk
+  source: united_kingdom
+  source_ids:
+  - SkySp.News.HD.uk
+- name: UK TNT SPORTS 1
+  id: tntsports1.uk
+  source: united_kingdom
+  source_ids:
+  - TNT.Sports.1.HD.uk
+- name: UK TNT SPORTS 2
+  id: tntsports2.uk
+  source: united_kingdom
+  source_ids:
+  - TNT.Sports.2.HD.uk
+- name: UK TNT SPORTS 3
+  id: tntsports3.uk
+  source: united_kingdom
+  source_ids:
+  - TNT.Sports.3.HD.uk
+- name: UK TNT SPORTS 4
+  id: tntsports4.uk
+  source: united_kingdom
+  source_ids:
+  - TNT.Sports.4.HD.uk
+- name: IT SKY SPORT UNO
+  id: skysportuno.it
+  source: italy
+  source_ids:
+  - Sky.Sport.Uno.it
+- name: IT SKY SPORT CALCIO
+  id: skysportcalcio.it
+  source: italy
+  source_ids:
+  - Sky.Sport.Calcio.it
+- name: IT SKY SPORT F1
+  id: skysportf1.it
+  source: italy
+  source_ids:
+  - Sky.Sport.F1.it
+- name: IT SKY SPORT MOTOGP
+  id: skysportmotogp.it
+  source: italy
+  source_ids:
+  - Sky.Sport.MotoGP.it
+- name: IT SKY SPORT TENNIS
+  id: skysporttennis.it
+  source: italy
+  source_ids:
+  - Sky.Sport.Tennis.it
+- name: IT SKY SPORT MAX
+  id: skysportmax.it
+  source: italy
+  source_ids:
+  - Sky.Sport.Max.it
+- name: IT SKY SPORT ARENA
+  id: skysportarena.it
+  source: italy
+  source_ids:
+  - Sky.Sport.Arena.it
+- name: IT SKY SPORT NBA
+  id: skysportnba.it
+  source: italy
+  source_ids:
+  - Sky.Sport.NBA.it
+- name: IT DAZN 1
+  id: dazn1.it
+  source: italy
+  source_ids:
+  - DAZN.1.it.it
+- name: IT DAZN 2
+  id: dazn2.it
+  source: italy
+  source_ids:
+  - DAZN.2.it.it
+- name: IT EUROSPORT 1
+  id: eurosport1.it
+  source: italy
+  source_ids:
+  - Eurosport.Italia.it
+- name: IT EUROSPORT 2
+  id: eurosport2.it
+  source: italy
+  source_ids:
+  - Eurosport.2.Italia.it
+- name: DE DAZN 1
+  id: dazn1.de
+  source: germany
+  source_ids:
+  - DAZN.1.de
+- name: DE DAZN 2
+  id: dazn2.de
+  source: germany
+  source_ids:
+  - DAZN.2.de
+- name: DE SKY SPORT TOP EVENT
+  id: skysporttopevent.de
+  source: germany
+  source_ids:
+  - Sky.Sport.Top.Event.de
+- name: DE SKY SPORT BUNDESLIGA 1
+  id: skysportbundesliga1.de
+  source: germany
+  source_ids:
+  - Sky.Sport.Bundesliga.1.de
+- name: DE SKY SPORT BUNDESLIGA 2
+  id: skysportbundesliga2.de
+  source: germany
+  source_ids:
+  - Sky.Sport.Bundesliga.2.de
+- name: DE SKY SPORT PREMIER LEAGUE
+  id: skysportspremierleague.de
+  source: germany
+  source_ids:
+  - Sky.Sport.Premier.League.de
+- name: DE SKY SPORT F1
+  id: skysportsf1.de
+  source: germany
+  source_ids:
+  - Sky.Sport.F1.de
+- name: DE SKY SPORT TENNIS
+  id: skysporttennis.de
+  source: germany
+  source_ids:
+  - Sky.Sport.Tennis.de
+- name: DE EUROSPORT 1
+  id: eurosport1.de
+  source: germany
+  source_ids:
+  - Eurosport.1.de
+- name: DE EUROSPORT 2
+  id: eurosport2.de
+  source: germany
+  source_ids:
+  - Eurosport.2.de
+- name: DE SPORT1
+  id: sport1.de
+  source: germany
+  source_ids:
+  - SPORT1.de
+- name: DE SPORT1+
+  id: sport1plus.de
+  source: germany
+  source_ids:
+  - SPORT1+.de
+- name: FR beIN SPORTS 1
+  id: beinsports1.fr
+  source: france
+  source_ids:
+  - beIN.SPORTS.1.fr
+- name: FR beIN SPORTS 2
+  id: beinsports2.fr
+  source: france
+  source_ids:
+  - beIN.SPORTS.2.fr
+- name: FR beIN SPORTS 3
+  id: beinsports3.fr
+  source: france
+  source_ids:
+  - beIN.SPORTS.3.fr
+- name: FR CANAL+ FOOT
+  id: canalplusfoot.fr
+  source: france
+  source_ids:
+  - Canal+.Foot.fr
+  - CANAL+FOOT.fr
+- name: FR CANAL+ SPORT
+  id: canalplussport.fr
+  source: france
+  source_ids:
+  - Canal+.Sport.fr
+  - CANAL+SPORT.fr
+- name: FR CANAL+ SPORT 360
+  id: canalplussport360.fr
+  source: france
+  source_ids:
+  - Canal+.Sport.360.fr
+  - CANAL+SPORT360.fr
+- name: FR EUROSPORT 1
+  id: eurosport1.fr
+  source: france
+  source_ids:
+  - Eurosport.1.fr
+  - Eurosport.1..fr
+- name: FR EUROSPORT 2
+  id: eurosport2.fr
+  source: france
+  source_ids:
+  - Eurosport.2.fr
+  - Eurosport.2..fr
+- name: FR DAZN 1
+  id: dazn1.fr
+  source: france
+  source_ids:
+  - DAZN.1.fr
+- name: GR COSMOTE SPORT 1
+  id: cosmotesport1.gr
+  source: greece
+  source_ids:
+  - COSMOTE.Sport.1.HD.gr
+  - CosmoteSport1.HD.gr
+- name: GR COSMOTE SPORT 2
+  id: cosmotesport2.gr
+  source: greece
+  source_ids:
+  - COSMOTE.Sport.2.HD.gr
+  - COSMOTESport2.HD.gr
+- name: GR COSMOTE SPORT 3
+  id: cosmotesport3.gr
+  source: greece
+  source_ids:
+  - COSMOTE.Sport.3.HD.gr
+  - COSMOTESport3.HD.gr
+- name: GR COSMOTE SPORT 4
+  id: cosmotesport4.gr
+  source: greece
+  source_ids:
+  - COSMOTE.Sport.4.HD.gr
+  - COSMOTESport4.HD.gr
+- name: GR COSMOTE SPORT 5
+  id: cosmotesport5.gr
+  source: greece
+  source_ids:
+  - COSMOTE.Sport.5.HD.gr
+  - COSMOTESport5.HD.gr
+- name: GR NOVASPORTS 1
+  id: novasports1.gr
+  source: greece
+  source_ids:
+  - Novasports1HD.gr
+  - Novasports1.gr
+- name: GR NOVASPORTS 2
+  id: novasports2.gr
+  source: greece
+  source_ids:
+  - Novasports2HD.gr
+  - Novasports2.gr
+- name: GR NOVASPORTS 3
+  id: novasports3.gr
+  source: greece
+  source_ids:
+  - Novasports3HD.gr
+  - Novasports3.gr
+- name: GR NOVASPORTS 4
+  id: novasports4.gr
+  source: greece
+  source_ids:
+  - Novasports4HD.gr
+  - Novasports4.gr
+- name: GR NOVASPORTS PRIME
+  id: novasportsprime.gr
+  source: greece
+  source_ids:
+  - Novasports.Prime.HD.gr
+  - Novasports.Prime.gr
+- name: GR NOVASPORTS PREMIER LEAGUE
+  id: novasportspremierleague.gr
+  source: greece
+  source_ids:
+  - Novasports.Premier.League.HD.gr
+  - Novasports.Premier.League..gr
+- name: RO DIGI SPORT 1
+  id: digisport1.ro
+  source: romania
+  source_ids:
+  - Digi.Sport.1.HD.ro
+  - Digi.Sport.1.ro
+- name: RO DIGI SPORT 2
+  id: digisport2.ro
+  source: romania
+  source_ids:
+  - Digi.Sport.2.HD.ro
+  - Digi.Sport.2.ro
+- name: RO DIGI SPORT 3
+  id: digisport3.ro
+  source: romania
+  source_ids:
+  - Digi.Sport.3.HD.ro
+  - Digi.Sport.3.ro
+- name: RO DIGI SPORT 4
+  id: digisport4.ro
+  source: romania
+  source_ids:
+  - Digi.Sport.4.HD.ro
+  - Digi.Sport.4.ro
+- name: RO PRIMA SPORT 1
+  id: primasport1.ro
+  source: romania
+  source_ids:
+  - Prima.Sport.1.HD.ro
+  - Prima.Sport.1.ro
+- name: RO PRIMA SPORT 2
+  id: primasport2.ro
+  source: romania
+  source_ids:
+  - Prima.Sport.2.HD.ro
+  - Prima.Sport.2.ro
+- name: RO PRIMA SPORT 3
+  id: primasport3.ro
+  source: romania
+  source_ids:
+  - Prima.Sport.3.HD.ro
+  - Prima.Sport.3.ro
+- name: RO PRIMA SPORT 4
+  id: primasport4.ro
+  source: romania
+  source_ids:
+  - Prima.Sport.4.HD.ro
+  - Prima.Sport.4.ro
+- name: RO EUROSPORT 1
+  id: eurosport1.ro
+  source: romania
+  source_ids:
+  - Eurosport.1.HD.ro
+  - Eurosport.1.ro
+- name: RO EUROSPORT 2
+  id: eurosport2.ro
+  source: romania
+  source_ids:
+  - Eurosport.2.HD.ro
+  - Eurosport.2.ro
+- name: AU ESPN
+  id: espn.au
+  source: australia
+  source_ids:
+  - ESPN.au
+- name: AU ESPN 2
+  id: espn2.au
+  source: australia
+  source_ids:
+  - ESPN2.au
+- name: AU beIN SPORTS 1
+  id: beinsports1.au
+  source: australia
+  source_ids:
+  - beINSports1.au
+- name: AU beIN SPORTS 2
+  id: beinsports2.au
+  source: australia
+  source_ids:
+  - beINSports2.au
+- name: AU beIN SPORTS 3
+  id: beinsports3.au
+  source: australia
+  source_ids:
+  - beINSports3.au
+- name: AU FOX CRICKET
+  id: foxcricket.au
+  source: australia
+  source_ids:
+  - FoxCricket.au
+  - FoxCricket.alt.au
+- name: AU FOX FOOTY
+  id: foxfooty.au
+  source: australia
+  source_ids:
+  - FoxFooty.au
+  - FoxFooty.alt.au
+- name: AU FOX LEAGUE
+  id: foxleague.au
+  source: australia
+  source_ids:
+  - FoxLeague.au
+  - FoxLeague.alt.au
+- name: AU FOX SPORTS 503
+  id: foxsports503.au
+  source: australia
+  source_ids:
+  - FoxSports503.au
+  - FoxSports503.alt.au
+- name: AU FOX SPORTS 505
+  id: foxsports505.au
+  source: australia
+  source_ids:
+  - FoxSports505.au
+  - FoxSports505alt.au
+- name: CA SPORTSNET 360
+  id: sportsnet360.ca
+  source: canada
+  source_ids:
+  - Sportsnet.360.HD.ca2
+- name: CA SPORTSNET ONE
+  id: sportsnetone.ca
+  source: canada
+  source_ids:
+  - Sportsnet.One.HD.ca2
+  - Sportsnet.One.ca2
+- name: CA SPORTSNET EAST
+  id: sportsneteast.ca
+  source: canada
+  source_ids:
+  - Sportsnet.East.HD.ca2
+  - Sportsnet.East.ca2
+- name: CA SPORTSNET WORLD
+  id: sportsnetworld.ca
+  source: canada
+  source_ids:
+  - Sportsnet.World.HD.ca2
+  - Sportsnet.World.ca2
+- name: CA RDS
+  id: rds.ca
+  source: canada
+  source_ids:
+  - Réseau.des.Sports.(RDS).HD.ca2
+  - Réseau.des.Sports.(RDS).ca2
+- name: CA RDS2
+  id: rds2.ca
+  source: canada
+  source_ids:
+  - RDS2.HD.ca2
+  - RDS2.ca2
+- name: CA ONE SOCCER
+  id: onesoccer.ca
+  source: canada
+  source_ids:
+  - One.Soccer.ca2
+- name: CA THE FIGHT NETWORK
+  id: thefightnetwork.ca
+  source: canada
+  source_ids:
+  - The.Fight.Network.ca2
+- name: CA beIN SPORTS
+  id: beinsports.ca
+  source: canada
+  source_ids:
+  - beIN.Sports.HD.(Canada).ca2
+- name: CA GOLF CHANNEL
+  id: golfchannel.ca
+  source: canada
+  source_ids:
+  - Golf.Channel.HD.ca2
+  - Golf.Channel.ca2
+- name: CZ NOVA SPORT 1
+  id: novasport1.cz
+  source: czechia
+  source_ids:
+  - Nova.Sport.1.cz
+- name: CZ NOVA SPORT 2
+  id: novasport2.cz
+  source: czechia
+  source_ids:
+  - Nova.Sport.2.cz
+- name: CZ NOVA SPORT 3
+  id: novasport3.cz
+  source: czechia
+  source_ids:
+  - Nova.Sport.3.cz
+- name: CZ NOVA SPORT 4
+  id: novasport4.cz
+  source: czechia
+  source_ids:
+  - Nova.Sport.4.cz
+- name: CZ NOVA SPORT 5
+  id: novasport5.cz
+  source: czechia
+  source_ids:
+  - Nova.Sport.5.cz
+- name: CZ NOVA SPORT 6
+  id: novasport6.cz
+  source: czechia
+  source_ids:
+  - Nova.Sport.6.cz
+- name: CZ PREMIER SPORT 1
+  id: premiersport1.cz
+  source: czechia
+  source_ids:
+  - Premier.Sport.1.cz
+  - PREMIER.SPORT.1.cz
+- name: CZ PREMIER SPORT 2
+  id: premiersport2.cz
+  source: czechia
+  source_ids:
+  - Premier.Sport.2.cz
+  - PREMIER.SPORT.2.cz
+- name: CZ PREMIER SPORT 3
+  id: premiersport3.cz
+  source: czechia
+  source_ids:
+  - Premier.Sport.3.cz
+  - PREMIER.SPORT.3.cz
+- name: CZ ONEPLAY SPORT 1
+  id: oneplaysport1.cz
+  source: czechia
+  source_ids:
+  - Oneplay.Sport.1.cz
+- name: CZ ONEPLAY SPORT 2
+  id: oneplaysport2.cz
+  source: czechia
+  source_ids:
+  - Oneplay.Sport.2.cz
+- name: CZ ONEPLAY SPORT 3
+  id: oneplaysport3.cz
+  source: czechia
+  source_ids:
+  - Oneplay.Sport.3.cz
+- name: CZ ONEPLAY SPORT 4
+  id: oneplaysport4.cz
+  source: czechia
+  source_ids:
+  - Oneplay.Sport.4.cz
+- name: CZ SPORT 1
+  id: sport1.cz
+  source: czechia
+  source_ids:
+  - Sport1.cz
+- name: CZ SPORT 2
+  id: sport2.cz
+  source: czechia
+  source_ids:
+  - Sport2.cz
+- name: CZ EUROSPORT 1
+  id: eurosport1.cz
+  source: czechia
+  source_ids:
+  - Eurosport.1.cz
+- name: CZ EUROSPORT 2
+  id: eurosport2.cz
+  source: czechia
+  source_ids:
+  - Eurosport.2.cz
+- name: CZ ČT SPORT
+  id: ctsport.cz
+  source: czechia
+  source_ids:
+  - ČT.sport.cz
+- name: CZ CANAL+ SPORT
+  id: canalplussport.cz
+  source: czechia
+  source_ids:
+  - Canal+.Sport.cz
+  - Canal.plus.Sport.CZ.cz
+- name: SK NOVA SPORT 1
+  id: novasport1.sk
+  source: slovakia
+  source_ids:
+  - Nova.Sport.1.HD.sk
+- name: SK NOVA SPORT 2
+  id: novasport2.sk
+  source: slovakia
+  source_ids:
+  - Nova.Sport.2.HD.sk
+- name: SK NOVA SPORT 3
+  id: novasport3.sk
+  source: slovakia
+  source_ids:
+  - Nova.Sport.3.HD.sk
+- name: SK NOVA SPORT 4
+  id: novasport4.sk
+  source: slovakia
+  source_ids:
+  - Nova.Sport.4.HD.sk
+- name: SK NOVA SPORT 5
+  id: novasport5.sk
+  source: slovakia
+  source_ids:
+  - Nova.Sport.5.HD.sk
+- name: SK NOVA SPORT 6
+  id: novasport6.sk
+  source: slovakia
+  source_ids:
+  - Nova.Sport.6.HD.sk
+- name: SK PREMIER SPORT 1
+  id: premiersport1.sk
+  source: slovakia
+  source_ids:
+  - PREMIER.SPORT.1.HD.sk
+- name: SK PREMIER SPORT 2
+  id: premiersport2.sk
+  source: slovakia
+  source_ids:
+  - PREMIER.SPORT.2.HD.sk
+- name: SK PREMIER SPORT 3
+  id: premiersport3.sk
+  source: slovakia
+  source_ids:
+  - PREMIER.SPORT.3.HD.sk
+- name: SK JOJ ŠPORT
+  id: jojsport.sk
+  source: slovakia
+  source_ids:
+  - JOJ.ŠPORT.HD.sk
+- name: SK SPORT 1
+  id: sport1.sk
+  source: slovakia
+  source_ids:
+  - Sport1.HD.sk
+- name: SK SPORT 2
+  id: sport2.sk
+  source: slovakia
+  source_ids:
+  - Sport2.HD.sk
+- name: SK EUROSPORT 1
+  id: eurosport1.sk
+  source: slovakia
+  source_ids:
+  - Eurosport.1.HD.sk
+- name: SK EUROSPORT 2
+  id: eurosport2.sk
+  source: slovakia
+  source_ids:
+  - Eurosport.2.HD.sk
+- name: HU M4 SPORT
+  id: m4sport.hu
+  source: hungary
+  source_ids:
+  - m4.hu
+- name: HU M4 SPORT+
+  id: m4sportplus.hu
+  source: hungary
+  source_ids:
+  - m4sport+.hu
+- name: HU MATCH 4
+  id: match4.hu
+  source: hungary
+  source_ids:
+  - Match.4.hu
+- name: HU SPORT 1
+  id: sport1.hu
+  source: hungary
+  source_ids:
+  - Sport1.hu
+- name: HU SPORT 2
+  id: sport2.hu
+  source: hungary
+  source_ids:
+  - Sport2.hu
+- name: HU SPÍLER 1 TV
+  id: spiler1.hu
+  source: hungary
+  source_ids:
+  - Spíler1.TV.hu
+- name: HU SPÍLER 2 TV
+  id: spiler2.hu
+  source: hungary
+  source_ids:
+  - Spíler2.TV.hu
+- name: HU EUROSPORT 1
+  id: eurosport1.hu
+  source: hungary
+  source_ids:
+  - Eurosport.HD.hu
+- name: HU EUROSPORT 2
+  id: eurosport2.hu
+  source: hungary
+  source_ids:
+  - Eurosport.2.HD.hu
+- name: BG MAX SPORT 1
+  id: maxsport1.bg
+  source: bulgaria
+  source_ids:
+  - MAX.Sport.1.bg
+- name: BG MAX SPORT 2
+  id: maxsport2.bg
+  source: bulgaria
+  source_ids:
+  - MAX.Sport.2.bg
+- name: BG MAX SPORT 3
+  id: maxsport3.bg
+  source: bulgaria
+  source_ids:
+  - MAX.Sport.3.bg
+- name: BG MAX SPORT 4
+  id: maxsport4.bg
+  source: bulgaria
+  source_ids:
+  - MAX.Sport.4.bg
+- name: BG DIEMA SPORT
+  id: diemasport.bg
+  source: bulgaria
+  source_ids:
+  - Diema.Sport.HD.bg
+- name: BG DIEMA SPORT 2
+  id: diemasport2.bg
+  source: bulgaria
+  source_ids:
+  - Diema.Sport.2.HD.bg
+- name: BG DIEMA SPORT 3
+  id: diemasport3.bg
+  source: bulgaria
+  source_ids:
+  - Diema.Sport.3.bg
+- name: BG EUROSPORT 1
+  id: eurosport1.bg
+  source: bulgaria
+  source_ids:
+  - Eurosport.bg
+- name: BG EUROSPORT 2
+  id: eurosport2.bg
+  source: bulgaria
+  source_ids:
+  - Eurosport.2.bg
+- name: BG RING
+  id: ring.bg
+  source: bulgaria
+  source_ids:
+  - RING.BG.bg
+- name: DK TV 2 SPORT
+  id: tv2sport.dk
+  source: denmark
+  source_ids:
+  - TV.2.Sport.dk
+- name: DK TV 2 SPORT X
+  id: tv2sportx.dk
+  source: denmark
+  source_ids:
+  - TV.2.Sport.X.dk
+- name: DK TV3 SPORT
+  id: tv3sport.dk
+  source: denmark
+  source_ids:
+  - TV3.SPORT.dk
+- name: DK VIAPLAY SPORT 1
+  id: viaplaysport1.dk
+  source: denmark
+  source_ids:
+  - Viaplay.Sport.1.dk
+- name: DK VIAPLAY SPORT 2
+  id: viaplaysport2.dk
+  source: denmark
+  source_ids:
+  - Viaplay.Sport.2.dk
+- name: DK VIAPLAY SPORT 3
+  id: viaplaysport3.dk
+  source: denmark
+  source_ids:
+  - Viaplay.Sport.3.dk
+- name: DK EUROSPORT 1
+  id: eurosport1.dk
+  source: denmark
+  source_ids:
+  - Eurosport.1.dk
+- name: DK EUROSPORT 2
+  id: eurosport2.dk
+  source: denmark
+  source_ids:
+  - Eurosport.2.dk
+  - EuroSport.2.HD.dk
+- name: DK SPORT LIVE
+  id: sportlive.dk
+  source: denmark
+  source_ids:
+  - SPORT.LIVE.dk
+- name: DK V SPORT GOLF
+  id: vsportgolf.dk
+  source: denmark
+  source_ids:
+  - V.sport.golf.dk
+- name: SE EUROSPORT 1
+  id: eurosport1.se
+  source: sweden
+  source_ids:
+  - '[EUROSHD].Eurosport.1.HD.se'
+- name: SE EUROSPORT 2
+  id: eurosport2.se
+  source: sweden
+  source_ids:
+  - '[EURSP2H].Eurosport.2.HD.se'
+- name: SE TV4 FOTBOLL
+  id: tv4fotboll.se
+  source: sweden
+  source_ids:
+  - '[TV4FOSV].TV4.Fotboll.se'
+- name: SE TV4 HOCKEY
+  id: tv4hockey.se
+  source: sweden
+  source_ids:
+  - '[TV4HOSV].TV4.Hockey.se'
+- name: SE TV4 MOTOR
+  id: tv4motor.se
+  source: sweden
+  source_ids:
+  - '[TV4MOSV].TV4.Motor.se'
+- name: SE TV4 SPORT LIVE 1
+  id: tv4sportlive1.se
+  source: sweden
+  source_ids:
+  - '[TV4SPL1].TV4.Sport.Live.1.se'
+- name: SE TV4 SPORT LIVE 2
+  id: tv4sportlive2.se
+  source: sweden
+  source_ids:
+  - '[TV4SPL2].TV4.Sport.Live.2.se'
+- name: SE TV4 SPORT LIVE 3
+  id: tv4sportlive3.se
+  source: sweden
+  source_ids:
+  - '[TV4SPL3].TV4.Sport.Live.3.se'
+- name: SE TV4 SPORT LIVE 4
+  id: tv4sportlive4.se
+  source: sweden
+  source_ids:
+  - '[TV4SPL4].TV4.Sport.Live.4.se'
+- name: SE TV4 TENNIS
+  id: tv4tennis.se
+  source: sweden
+  source_ids:
+  - '[TV4TESV].TV4.Tennis.se'
+- name: SE V SPORT GOLF
+  id: vsportgolf.se
+  source: sweden
+  source_ids:
+  - '[VGOLFHD].V.Sport.Golf.HD.se'
+- name: SE V SPORT FOTBOLL
+  id: vsportfotboll.se
+  source: sweden
+  source_ids:
+  - '[VIAFOHD].V.Sport.Fotboll.HD.se'
+- name: SE V SPORT MOTOR
+  id: vsportmotor.se
+  source: sweden
+  source_ids:
+  - '[VIASMHD].V.Sport.Motor.HD.se'
+- name: NO TV 2 SPORT 1
+  id: tv2sport1.no
+  source: norway
+  source_ids:
+  - TV.2.Sport.1.Norway.(NO,NO).no
+- name: NO TV 2 SPORT 2
+  id: tv2sport2.no
+  source: norway
+  source_ids:
+  - TV.2.Sport.2.Norway.(NO,NO).no
+- name: NO TV 2 SPORT PREMIUM
+  id: tv2sportpremium.no
+  source: norway
+  source_ids:
+  - TV.2.Sport.Premium.(NO,NO).no
+- name: NO V SPORT 1
+  id: vsport1.no
+  source: norway
+  source_ids:
+  - Viasport.1.Norway.(NO,NO).no
+- name: NO V SPORT 2
+  id: vsport2.no
+  source: norway
+  source_ids:
+  - Viasport.2.Norway.(NO,NO).no
+- name: NO V SPORT 3
+  id: vsport3.no
+  source: norway
+  source_ids:
+  - Viasport.3.Norway.(NO,NO).no
+- name: NO V SPORT+
+  id: vsportplus.no
+  source: norway
+  source_ids:
+  - Viasport+.Norway.(NO,NO).no
+- name: NO V SPORT PREMIER LEAGUE
+  id: vsportpremierleague.no
+  source: norway
+  source_ids:
+  - V.sport.Premier.League.Norway.(NO,NO).no
+- name: NO V SPORT PREMIER LEAGUE 1
+  id: vsportpremierleague1.no
+  source: norway
+  source_ids:
+  - V.sport.Premier.League.1.Norway.(NO,NO).no
+- name: NO V SPORT PREMIER LEAGUE 2
+  id: vsportpremierleague2.no
+  source: norway
+  source_ids:
+  - V.sport.Premier.League.2.Norway.(NO,NO).no
+- name: NO V SPORT PREMIER LEAGUE 3
+  id: vsportpremierleague3.no
+  source: norway
+  source_ids:
+  - V.sport.Premier.League.3.Norway.(NO,NO).no
+- name: NO V SPORT PREMIER LEAGUE 4
+  id: vsportpremierleague4.no
+  source: norway
+  source_ids:
+  - V.sport.Premier.League.4.Norway.(NO,NO).no
+- name: NO EUROSPORT 1
+  id: eurosport1.no
+  source: norway
+  source_ids:
+  - Eurosport.1.Norway.(NO,NO).no
+- name: NO EUROSPORT N
+  id: eurosportn.no
+  source: norway
+  source_ids:
+  - Eurosport.N.Norway.(NO,NO).no
+- name: FI MTV URHEILU 1
+  id: mtvurheilu1.fi
+  source: finland
+  source_ids:
+  - MTV.Urheilu.fi
+- name: FI MTV URHEILU 2
+  id: mtvurheilu2.fi
+  source: finland
+  source_ids:
+  - MTV.Urheilu.2.fi
+- name: FI MTV URHEILU 3
+  id: mtvurheilu3.fi
+  source: finland
+  source_ids:
+  - MTV.Urheilu.3.fi
+- name: FI V SPORT 1
+  id: vsport1.fi
+  source: finland
+  source_ids:
+  - V.Sport.1.fi
+- name: FI V SPORT FOOTBALL
+  id: vsportfootball.fi
+  source: finland
+  source_ids:
+  - V.Sport.Football.fi
+- name: FI V SPORT GOLF
+  id: vsportgolf.fi
+  source: finland
+  source_ids:
+  - V.Sport.Golf.fi
+- name: FI V SPORT PREMIUM
+  id: vsportpremium.fi
+  source: finland
+  source_ids:
+  - V.Sport.Premium.fi
+- name: FI V SPORT LIVE 1
+  id: vsportlive1.fi
+  source: finland
+  source_ids:
+  - V.Sport.Live.1.fi
+- name: FI V SPORT LIVE 2
+  id: vsportlive2.fi
+  source: finland
+  source_ids:
+  - V.Sport.Live.2.fi
+- name: FI V SPORT LIVE 3
+  id: vsportlive3.fi
+  source: finland
+  source_ids:
+  - V.Sport.Live.3.fi
+- name: FI VIAPLAY SPORT 1
+  id: viaplaysport1.fi
+  source: finland
+  source_ids:
+  - Viaplay.1.Urheilu.fi
+- name: FI VIAPLAY SPORT 2
+  id: viaplaysport2.fi
+  source: finland
+  source_ids:
+  - Viaplay.2.Urheilu.fi
+- name: FI VIAPLAY SPORT 3
+  id: viaplaysport3.fi
+  source: finland
+  source_ids:
+  - Viaplay.3.Urheilu.fi
+- name: FI EUROSPORT 1
+  id: eurosport1.fi
+  source: finland
+  source_ids:
+  - Eurosport.1.fi
+- name: FI EUROSPORT 2
+  id: eurosport2.fi
+  source: finland
+  source_ids:
+  - Eurosport.2.fi
+- name: TR A SPOR
+  id: aspor.tr
+  source: turkey
+  source_ids:
+  - A.SPOR.HD.tr
+  - A.SPOR.tr
+  - A.Spor.tr
+- name: TR S SPORT
+  id: ssport.tr
+  source: turkey
+  source_ids:
+  - S.SPORT.tr
+- name: TR S SPORT 2
+  id: ssport2.tr
+  source: turkey
+  source_ids:
+  - S.SPORT.2.tr
+- name: TR TİVİBU SPOR 1
+  id: tivibuspor1.tr
+  source: turkey
+  source_ids:
+  - TİVİBU.SPOR.1.tr
+- name: TR TİVİBU SPOR 2
+  id: tivibuspor2.tr
+  source: turkey
+  source_ids:
+  - TİVİBU.SPOR.2.tr
+- name: TR TİVİBU SPOR 3
+  id: tivibuspor3.tr
+  source: turkey
+  source_ids:
+  - TİVİBU.SPOR.3.tr
+- name: TR TİVİBU SPOR 4
+  id: tivibuspor4.tr
+  source: turkey
+  source_ids:
+  - TİVİBU.SPOR.4.tr
+- name: TR TRT SPOR
+  id: trtspor.tr
+  source: turkey
+  source_ids:
+  - TRT.SPOR.HD.tr
+  - TRT.SPOR.tr
+  - TRT.Spor.tr
+- name: TR TRT SPOR YILDIZ
+  id: trtsporyildiz.tr
+  source: turkey
+  source_ids:
+  - TRT.SPOR.YILDIZ.tr
+- name: TR EUROSPORT 1
+  id: eurosport1.tr
+  source: turkey
+  source_ids:
+  - EUROSPORT.1.HD.tr
+  - EUROSPORT.1.tr
+  - Eurosport.1.tr
+- name: TR EUROSPORT 2
+  id: eurosport2.tr
+  source: turkey
+  source_ids:
+  - EUROSPORT.2.HD.tr
+  - EUROSPORT.2.tr
+  - Eurosport.2.tr
+- name: TR HT SPOR
+  id: htspor.tr
+  source: turkey
+  source_ids:
+  - HT.SPOR.HD.tr
+  - HT.SPOR.tr
+  - HT.Spor.tr
+- name: TR SPORTS TV
+  id: sportstv.tr
+  source: turkey
+  source_ids:
+  - SPORTS.TV.HD.tr
+- name: TR TABİİ SPOR
+  id: tabiispor.tr
+  source: turkey
+  source_ids:
+  - tabii.spor.tr
+- name: US ESPN
+  id: espn.us
+  source: usa
+  source_ids:
+  - ESPN.HD.us2
+- name: US ESPN 2
+  id: espn2.us
+  source: usa
+  source_ids:
+  - ESPN2.HD.us2
+- name: US ESPNEWS
+  id: espnews.us
+  source: usa
+  source_ids:
+  - ESPNEWS.HD.us2
+- name: US ESPNU
+  id: espnu.us
+  source: usa
+  source_ids:
+  - ESPNU.HD.us2
+- name: US FS1
+  id: fs1.us
+  source: usa
+  source_ids:
+  - FS1.Fox.Sports.1.HD.us2
+  - FS1.HD.us2
+- name: US FS2
+  id: fs2.us
+  source: usa
+  source_ids:
+  - FS2.Fox.Sports.2.HD.us2
+  - FS2.HD.us2
+- name: US NFL NETWORK
+  id: nflnetwork.us
+  source: usa
+  source_ids:
+  - NFL.Network.HD.us2
+- name: US NBA TV
+  id: nbatv.us
+  source: usa
+  source_ids:
+  - NBA.TV.HD.us2
+- name: US MLB NETWORK
+  id: mlbnetwork.us
+  source: usa
+  source_ids:
+  - MLB.Network.HD.us2
+- name: US NHL NETWORK
+  id: nhlnetwork.us
+  source: usa
+  source_ids:
+  - NHL.Network.HD.us2
+- name: US GOLF CHANNEL
+  id: golfchannel.us
+  source: usa
+  source_ids:
+  - Golf.Channel.HD.us2
+- name: US TENNIS CHANNEL
+  id: tennischannel.us
+  source: usa
+  source_ids:
+  - Tennis.Channel.HD.us2
+- name: US CBS SPORTS NETWORK
+  id: cbssportsnetwork.us
+  source: usa
+  source_ids:
+  - CBS.Sports.Network.HD.us2
+- name: US BIG TEN NETWORK
+  id: bigtennetwork.us
+  source: usa
+  source_ids:
+  - Big.Ten.Network.HD.us2
+- name: US SEC NETWORK
+  id: secnetwork.us
+  source: usa
+  source_ids:
+  - SEC.Network.HD.us2
+- name: US ACC NETWORK
+  id: accnetwork.us
+  source: usa
+  source_ids:
+  - ACC.Network.us2
+- name: US beIN SPORTS
+  id: beinsports.us
+  source: usa
+  source_ids:
+  - beIN.Sports.USA.HD.us2
+- name: US TUDN
+  id: tudn.us
+  source: usa
+  source_ids:
+  - TUDN.us2
+- name: US FOX SOCCER PLUS
+  id: foxsoccerplus.us
+  source: usa
+  source_ids:
+  - Fox.Soccer.Plus.HD.us2
+verified_fallbacks:
+- channel_id: sport1.sk
+  approved: true
+  source: poland
+  source_ids:
+  - Sport.1.pl
+  reason: 'v3.9: exact Sport 1 identity and 99/100 same-slot schedule consensus'
+  evidence:
+    verified_in_version: '3.9'
+    identity_score: 1.0
+    schedule_consensus: 0.99
+    same_slot_matches: 99
+    evidence_slots: 100
+    schedule_verified: true
