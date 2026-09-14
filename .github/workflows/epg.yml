@@ -1,4 +1,4 @@
-name: Build and publish Sports EPG v3.17
+name: Build and publish Sports EPG v3.18
 
 on:
   workflow_dispatch:
@@ -66,11 +66,20 @@ jobs:
       - run: python v315_test.py
       - run: python v316_test.py
       - run: python v317_test.py
+          python v318_test.py
+          python v318_plusx_test.py
+          python v318_plusx_expand_test.py
       - run: python epg_generator.py
+
+      - name: Prepare GitHub Pages
+        run: |
+          cp docs/status.html docs/index.html
+          touch docs/.nojekyll
+          ls -lah docs/
 
       - uses: actions/configure-pages@v5
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: "./docs"
 
@@ -84,4 +93,3 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-
