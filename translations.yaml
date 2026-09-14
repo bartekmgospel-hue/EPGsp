@@ -116,6 +116,195 @@ pl:
     tekrar: powtórka
     yarı final: półfinał
     çeyrek final: ćwierćfinał
+    # English / international sports-title vocabulary
+    live sports: sport na żywo
+    live sport: sport na żywo
+    live match: mecz na żywo
+    live game: mecz na żywo
+    match: mecz
+    game: mecz
+    regular season: sezon zasadniczy
+    preseason: okres przygotowawczy
+    pre-season: okres przygotowawczy
+    postseason: faza pucharowa
+    post-season: faza pucharowa
+    playoffs: play-off
+    playoff: play-off
+    play-offs: play-off
+    highlights: skrót
+    recap: podsumowanie
+    preview: zapowiedź
+    pregame: studio przedmeczowe
+    pre-game: studio przedmeczowe
+    postgame: studio pomeczowe
+    post-game: studio pomeczowe
+    warm-up: rozgrzewka
+    warm up: rozgrzewka
+    practice: trening
+    training: trening
+    qualifying: kwalifikacje
+    qualification: kwalifikacje
+    championship: mistrzostwa
+    championships: mistrzostwa
+    tournament: turniej
+    friendly: mecz towarzyski
+    friendly match: mecz towarzyski
+    cup: puchar
+    group stage: faza grupowa
+    knockout stage: faza pucharowa
+    round of 16: 1/8 finału
+    round of 32: 1/16 finału
+    quarterfinal: ćwierćfinał
+    quarterfinals: ćwierćfinały
+    semifinal: półfinał
+    semifinals: półfinały
+    final: finał
+    finals: finały
+    first leg: pierwszy mecz
+    second leg: rewanż
+    leg 1: pierwszy mecz
+    leg 2: rewanż
+    matchday: kolejka
+    week: kolejka
+    round: runda
+    men: mężczyźni
+    men's: mężczyzn
+    women: kobiety
+    women's: kobiet
+    junior: juniorzy
+    juniors: juniorzy
+    baseball: baseball
+    basketball: koszykówka
+    ice hockey: hokej na lodzie
+    american football: futbol amerykański
+    college football: futbol akademicki
+    volleyball: siatkówka
+    handball: piłka ręczna
+    boxing: boks
+    athletics: lekkoatletyka
+    swimming: pływanie
+    cycling: kolarstwo
+    skiing: narciarstwo
+    motorsport: motorsport
+    motor racing: sporty motorowe
+    racing: wyścigi
+    soccer: piłka nożna
+    football: piłka nożna
+    # Spanish
+    partido: mecz
+    jornada: kolejka
+    temporada regular: sezon zasadniczy
+    pretemporada: okres przygotowawczy
+    resumen: skrót
+    previa: zapowiedź
+    campeonato: mistrzostwa
+    torneo: turniej
+    amistoso: mecz towarzyski
+    fase de grupos: faza grupowa
+    octavos de final: 1/8 finału
+    final: finał
+    # Portuguese
+    jogo: mecz
+    temporada regular: sezon zasadniczy
+    pré-jogo: studio przedmeczowe
+    pos-jogo: studio pomeczowe
+    pós-jogo: studio pomeczowe
+    resumo: skrót
+    campeonato: mistrzostwa
+    torneio: turniej
+    amistoso: mecz towarzyski
+    fase de grupos: faza grupowa
+    oitavos de final: 1/8 finału
+    # German
+    spiel: mecz
+    spieltag: kolejka
+    reguläre saison: sezon zasadniczy
+    vorschau: zapowiedź
+    zusammenfassung: skrót
+    freundschaftsspiel: mecz towarzyski
+    gruppenphase: faza grupowa
+    achtelfinale: 1/8 finału
+    finale: finał
+    # Dutch
+    wedstrijd: mecz
+    speelronde: kolejka
+    reguliere competitie: sezon zasadniczy
+    voorbeschouwing: zapowiedź
+    samenvatting: skrót
+    oefenwedstrijd: mecz towarzyski
+    groepsfase: faza grupowa
+    achtste finale: 1/8 finału
+    finale: finał
+    # Czech / Slovak
+    zápas: mecz
+    zapas: mecz
+    kolo: kolejka
+    základní část: sezon zasadniczy
+    základná časť: sezon zasadniczy
+    přátelský zápas: mecz towarzyski
+    priateľský zápas: mecz towarzyski
+    skupinová fáze: faza grupowa
+    skupinová fáza: faza grupowa
+    osmifinále: 1/8 finału
+    semifinále: półfinał
+    finále: finał
+    # Hungarian
+    mérkőzés: mecz
+    forduló: kolejka
+    alapszakasz: sezon zasadniczy
+    összefoglaló: skrót
+    előzetes: zapowiedź
+    barátságos mérkőzés: mecz towarzyski
+    csoportkör: faza grupowa
+    nyolcaddöntő: 1/8 finału
+    negyeddöntő: ćwierćfinał
+    elődöntő: półfinał
+    döntő: finał
+    # Croatian / Serbian / Bosnian
+    utakmica uživo: mecz na żywo
+    utakmica: mecz
+    kolo: kolejka
+    regularna sezona: sezon zasadniczy
+    sažetak: skrót
+    najava: zapowiedź
+    prijateljska utakmica: mecz towarzyski
+    grupna faza: faza grupowa
+    osmina finala: 1/8 finału
+    četvrtfinale: ćwierćfinał
+    polufinale: półfinał
+    finale: finał
+    # Scandinavian / Finnish
+    kamp: mecz
+    match: mecz
+    omgång: kolejka
+    runde: kolejka
+    grundserie: sezon zasadniczy
+    grundserien: sezon zasadniczy
+    sammendrag: skrót
+    höjdpunkter: skrót
+    højdepunkter: skrót
+    harjoitusottelu: mecz towarzyski
+    vänskapsmatch: mecz towarzyski
+    gruppspel: faza grupowa
+    gruppespil: faza grupowa
+    åttedelsfinal: 1/8 finału
+    åttondelsfinal: 1/8 finału
+    # Turkish
+    maç: mecz
+    mac: mecz
+    hafta: kolejka
+    normal sezon: sezon zasadniczy
+    özet: skrót
+    ön izleme: zapowiedź
+    hazırlık maçı: mecz towarzyski
+    grup aşaması: faza grupowa
+    son 16: 1/8 finału
+    yarı final: półfinał
+    final: finał
+    # Common separators / labels
+    vs.: –
+    vs: –
+    versus: –
 en:
   replacements:
     uživo: live

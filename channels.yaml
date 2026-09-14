@@ -6,7 +6,8 @@ settings:
   add_stage_prefix: true
   add_sport_prefix: true
   use_emoji: true
-  preserve_original_title: true
+  preserve_original_title: false
+  translated_title_only: true
   keep_original_descriptions: true
   external_live_min_score: 0.6
   external_live_date_tolerance_days: 1
@@ -14,7 +15,7 @@ settings:
   output_gz: docs/sports_epg.xml.gz
   report_file: docs/report.json
   status_file: docs/status.html
-  generator_name: Bartosz Sports EPG v3.17
+  generator_name: Bartosz Sports EPG v3.18
   fail_on_missing_channels: false
   external_live_time_tolerance_minutes: 150
   external_live_min_title_score: 0.3
@@ -155,6 +156,17 @@ settings:
   health_score_single_anomaly_penalty_medium: 4
   health_score_single_anomaly_penalty_high: 7
   health_score_single_anomaly_penalty_max: 12
+  health_trend_external_unique_snapshots_required: 2
+  external_live_enrich_title_with_participants: true
+  external_live_enrich_generic_only: true
+  external_live_title_enrichment_min_score: 0.68
+  add_unknown_sport_prefix_for_live: true
+  polish_source_comparison_file: docs/polish_source_comparison.json
+  plusx_autoimport_enabled: true
+  plusx_autoimport_global_sport: true
+  plusx_autoimport_country_codes: [uk, us, de, cz, sk, ca]
+  plusx_autoimport_report_file: docs/plusx_autoimport.json
+  priority_source_autodiscovery_enabled: true
 sources:
   sportklub:
     url: https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz
@@ -204,6 +216,12 @@ sources:
     url: https://epgshare01.online/epgshare01/epg_ripper_FR1.xml.gz
     timezone: Europe/Paris
     sportguide_country: fr
+  poland_plusx:
+    url: http://list.plusx.tv/pl10.gz
+    timezone: Europe/Warsaw
+    sportguide_country: pl
+    optional: true
+    description: User-provided Polish XMLTV priority source
   poland:
     url: https://epgshare01.online/epgshare01/epg_ripper_PL1.xml.gz
     timezone: Europe/Warsaw
@@ -269,7 +287,8 @@ external_live:
   provider: sportguide
   request_timeout_seconds: 30
   pause_between_requests_seconds: 0.2
-  user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0 Safari/537.36 SportsEPG/3.13
+  user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0 Safari/537.36
+    SportsEPG/3.13
   cache_dir: .cache/sportguide
   cache_ttl_minutes: 60
   accept_language: en-US,en;q=0.9
@@ -612,30 +631,60 @@ channels:
   source_ids:
   - CANAL+.Sport.HD.pl
   - CANAL+.Sport.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Sport.HD.pl
+    - CANAL+.Sport.pl
+    autodiscover: true
 - name: PL CANAL+ SPORT 2
   id: canalplussport2.pl
   source: poland
   source_ids:
   - CANAL+.Sport.2.HD.pl
   - CANAL+.Sport.2.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Sport.2.HD.pl
+    - CANAL+.Sport.2.pl
+    autodiscover: true
 - name: PL CANAL+ SPORT 3
   id: canalplussport3.pl
   source: poland
   source_ids:
   - CANAL+.Sport.3.HD.pl
   - CANAL+.Sport.3.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Sport.3.HD.pl
+    - CANAL+.Sport.3.pl
+    autodiscover: true
 - name: PL CANAL+ SPORT 4
   id: canalplussport4.pl
   source: poland
   source_ids:
   - CANAL+.Sport.4.HD.pl
   - CANAL+.Sport.4.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Sport.4.HD.pl
+    - CANAL+.Sport.4.pl
+    autodiscover: true
 - name: PL CANAL+ SPORT 5
   id: canalplussport5.pl
   source: poland
   source_ids:
   - CANAL+.Sport.5.HD.pl
   - CANAL+.Sport.5.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Sport.5.HD.pl
+    - CANAL+.Sport.5.pl
+    autodiscover: true
 - name: PL ELEVEN SPORTS 1
   id: elevensports1.pl
   source: poland
@@ -643,64 +692,129 @@ channels:
   - Eleven.Sports.1.HD.pl
   - Eleven.Sports.1.4K.pl
   - Eleven.Sports.1.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Eleven.Sports.1.HD.pl
+    - Eleven.Sports.1.4K.pl
+    - Eleven.Sports.1.pl
+    autodiscover: true
 - name: PL ELEVEN SPORTS 2
   id: elevensports2.pl
   source: poland
   source_ids:
   - Eleven.Sports.2.HD.pl
   - Eleven.Sports.2.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Eleven.Sports.2.HD.pl
+    - Eleven.Sports.2.pl
+    autodiscover: true
 - name: PL ELEVEN SPORTS 3
   id: elevensports3.pl
   source: poland
   source_ids:
   - Eleven.Sports.3.HD.pl
   - Eleven.Sports.3.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Eleven.Sports.3.HD.pl
+    - Eleven.Sports.3.pl
+    autodiscover: true
 - name: PL ELEVEN SPORTS 4
   id: elevensports4.pl
   source: poland
   source_ids:
   - Eleven.Sports.4.HD.pl
   - Eleven.Sports.4.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Eleven.Sports.4.HD.pl
+    - Eleven.Sports.4.pl
+    autodiscover: true
 - name: PL EUROSPORT 1
   id: eurosport1.pl
   source: poland
   source_ids:
   - Eurosport.1.HD.pl
   - Eurosport.1.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Eurosport.1.HD.pl
+    - Eurosport.1.pl
+    autodiscover: true
 - name: PL EUROSPORT 2
   id: eurosport2.pl
   source: poland
   source_ids:
   - Eurosport.2.HD.pl
   - Eurosport.2.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Eurosport.2.HD.pl
+    - Eurosport.2.pl
+    autodiscover: true
 - name: PL POLSAT SPORT
   id: polsatsport.pl
   source: poland
   source_ids:
   - Polsat.Sport.HD.pl
   - Polsat.Sport.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Polsat.Sport.HD.pl
+    - Polsat.Sport.pl
+    autodiscover: true
 - name: PL POLSAT SPORT EXTRA
   id: polsatsportextra.pl
   source: poland
   source_ids:
   - Polsat.Sport.Extra.HD.pl
   - Polsat.Sport.Extra.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Polsat.Sport.Extra.HD.pl
+    - Polsat.Sport.Extra.pl
+    autodiscover: true
 - name: PL POLSAT SPORT FIGHT
   id: polsatsportfight.pl
   source: poland
   source_ids:
   - Polsat.Sport.Fight.HD.pl
   - Polsat.Sport.Fight.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Polsat.Sport.Fight.HD.pl
+    - Polsat.Sport.Fight.pl
+    autodiscover: true
 - name: PL POLSAT SPORT PREMIUM 1
   id: polsatsportpremium1.pl
   source: poland
   source_ids:
   - Polsat.Sport.Premium.1.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Polsat.Sport.Premium.1.pl
+    autodiscover: true
 - name: PL POLSAT SPORT PREMIUM 2
   id: polsatsportpremium2.pl
   source: poland
   source_ids:
   - Polsat.Sport.Premium.2.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - Polsat.Sport.Premium.2.pl
+    autodiscover: true
 - name: UK SKY SPORTS MAIN EVENT
   id: skysportsmainevent.uk
   source: united_kingdom

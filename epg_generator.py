@@ -37,6 +37,10 @@ SPORTS = [
               "uefa","fifa","ekstraklasa","super liga","superliga","fotbal","futbal","labdarúgás","fodbold","fotboll","fotball","jalkapallo","futbol"]},
     {"key":"basketball","pl":"Koszykówka","en":"Basketball","emoji":"🏀",
      "terms":["košarka","kosarka","basketball","nba","euroleague","eurocup","aba liga","basket league","basketbal","kosárlabda","basketbol"]},
+    {"key":"baseball","pl":"Baseball","en":"Baseball","emoji":"⚾",
+     "terms":["baseball","mlb","major league baseball","world series"]},
+    {"key":"american_football","pl":"Futbol amerykański","en":"American football","emoji":"🏈",
+     "terms":["american football","nfl","ncaa football","college football","super bowl"]},
     {"key":"tennis","pl":"Tenis","en":"Tennis","emoji":"🎾",
      "terms":["tenis","tennis","atp ","wta ","roland garros","wimbledon","us open","australian open"]},
     {"key":"volleyball","pl":"Siatkówka","en":"Volleyball","emoji":"🏐",
@@ -480,14 +484,14 @@ def load_channel_lkg(ch_cfg: dict, settings: dict) -> tuple[ET.Element | None, d
 def load_recommendation_history(settings: dict) -> dict:
     path=BASE_DIR/settings.get("recommendation_history_file",".cache/recommendation_history.json")
     if not path.exists():
-        return {"version":"3.17","items":{}}
+        return {"version":"3.18","items":{}}
     try:
         data=json.loads(path.read_text(encoding="utf-8"))
         if not isinstance(data,dict): raise ValueError("history is not an object")
         data.setdefault("items",{})
         return data
     except Exception:
-        return {"version":"3.17","items":{}}
+        return {"version":"3.18","items":{}}
 
 def save_recommendation_history(history: dict, settings: dict):
     path=BASE_DIR/settings.get("recommendation_history_file",".cache/recommendation_history.json")
@@ -1778,18 +1782,141 @@ def audit_external_match(score: float, details: dict, confidence: str, settings:
         grade="review"
     return {"grade":grade,"reasons":reasons}
 
+GENERIC_PROGRAMME_TITLE_PATTERNS = [
+    r"^live$", r"^sport(?:s)?$", r"^game$", r"^match$", r"^event$", r"^studio$", r"^pregame$", r"^postgame$",
+    r"^football$", r"^soccer$", r"^basketball$", r"^baseball$", r"^hockey$", r"^tennis$", r"^golf$",
+    r"^futbol$", r"^fútbol$", r"^mlb network$", r"^mlb baseball$", r"^tudn$", r"^sportscenter$",
+]
+
+CHANNEL_SPORT_FALLBACKS = [
+    (r"\bmlb\b", "baseball"),
+    (r"\bnba\b", "basketball"),
+    (r"\bnhl\b", "hockey"),
+    (r"\bnfl\b", "american_football"),
+    (r"tennis channel", "tennis"),
+    (r"golf channel", "golf"),
+]
+
+def sport_by_key(key: str | None):
+    if not key:
+        return None
+    for sport in SPORTS:
+        if sport.get("key") == key:
+            return sport
+    return None
+
+def fallback_sport_from_channel(channel_name: str | None):
+    hay = ascii_fold(channel_name or "")
+    for pattern, key in CHANNEL_SPORT_FALLBACKS:
+        if re.search(pattern, hay, flags=re.I):
+            return sport_by_key(key)
+    return None
+
+def is_generic_programme_title(title: str) -> bool:
+    title = normalized(strip_live_words(title))
+    folded = ascii_fold(title)
+    if not folded:
+        return True
+    if any(re.fullmatch(p, folded, flags=re.I) for p in GENERIC_PROGRAMME_TITLE_PATTERNS):
+        return True
+    entities = participant_tokens(title)
+    sport = sport_from_text(title)
+    league = league_from_text(title)
+    if entities:
+        return False
+    if sport and not league and len(token_set(title)) <= 3:
+        return True
+    return False
+
+def split_matchup(text: str) -> tuple[str, str] | None:
+    hay = normalized(text)
+    separators = [r"\s+vs\.?\s+", r"\s+v\.?\s+", r"\s+@\s+", r"\s+-\s+", r"\s+–\s+", r"\s+—\s+", r"\s+x\s+"]
+    for pattern in separators:
+        parts = re.split(pattern, hay, maxsplit=1, flags=re.I)
+        if len(parts) != 2:
+            continue
+        left, right = normalized(parts[0]), normalized(parts[1])
+        if not left or not right:
+            continue
+        if len(left.split()) > 7 or len(right.split()) > 7:
+            continue
+        if participant_tokens(left) and participant_tokens(right):
+            return left, right
+    return None
+
+def enrich_external_event_title(raw_title: str, channel_name: str | None = None) -> dict:
+    title = normalized(raw_title)
+    if not title:
+        return {"title": "", "participants": [], "has_participants": False, "competition": None}
+    competition = None
+    matchup_text = title
+    if ":" in title:
+        left, right = title.split(":", 1)
+        if split_matchup(right):
+            competition, matchup_text = normalized(left), normalized(right)
+    if competition is None and " - " in title:
+        left, right = title.split(" - ", 1)
+        if split_matchup(right) and len(left.split()) <= 7:
+            competition, matchup_text = normalized(left), normalized(right)
+    matchup = split_matchup(matchup_text)
+    league = league_from_text(title)
+    sport = sport_from_text(title) or fallback_sport_from_channel(channel_name)
+    if competition is None and league:
+        competition = league.get("name")
+    elif competition is None and channel_name and re.search(r"\bmlb\b", ascii_fold(channel_name), flags=re.I):
+        competition = "MLB"
+    if matchup:
+        display = f"{matchup[0]} – {matchup[1]}"
+        if competition and ascii_fold(competition) not in ascii_fold(display):
+            display = f"{competition}: {display}"
+        return {
+            "title": display,
+            "participants": [matchup[0], matchup[1]],
+            "has_participants": True,
+            "competition": competition,
+            "sport": (sport or {}).get("key"),
+            "league": (league or {}).get("key"),
+        }
+    return {
+        "title": title,
+        "participants": [],
+        "has_participants": False,
+        "competition": competition,
+        "sport": (sport or {}).get("key"),
+        "league": (league or {}).get("key"),
+    }
+
+def should_prefer_external_title(original_title: str, translated_title: str, external_title: str, external_meta: dict, settings: dict) -> bool:
+    if not settings.get("external_live_enrich_title_with_participants", True):
+        return False
+    if not external_title:
+        return False
+    if settings.get("external_live_enrich_generic_only", True):
+        return is_generic_programme_title(original_title) or bool(external_meta.get("has_participants"))
+    return len(external_title) > len(normalized(translated_title))
+
 def format_title(original_title: str, context_text: str, settings: dict, replacements: dict,
-                 external_match: dict|None = None) -> tuple[str,dict]:
-    context = normalized(" ".join([original_title, context_text, external_match.get("title","") if external_match else ""]))
+                 external_match: dict|None = None, external_score: float | None = None,
+                 channel_name: str | None = None) -> tuple[str,dict]:
+    external_title = external_match.get("title","") if external_match else ""
+    context = normalized(" ".join([original_title, context_text, external_title, channel_name or ""]))
     replay = contains_any(context, REPLAY_TERMS)
     explicit_live = detect_explicit_live(context)
     live = (external_match is not None or explicit_live) and not replay
 
-    sport = sport_from_text(context)
+    sport = sport_from_text(context) or fallback_sport_from_channel(channel_name)
     league = league_from_text(context)
     stage = stage_from_text(context)
     base = strip_live_words(original_title) if live else original_title
     translated, changed = phrase_translate(base, replacements)
+
+    participant_meta = {}
+    if external_match:
+        participant_meta = enrich_external_event_title(external_title, channel_name)
+        min_score = float(settings.get("external_live_title_enrichment_min_score", 0.68))
+        if (external_score is None or external_score >= min_score) and should_prefer_external_title(base, translated, participant_meta.get("title", ""), participant_meta, settings):
+            translated = participant_meta.get("title") or translated
+            changed = True
 
     lang = settings.get("target_language","pl")
     emoji = bool(settings.get("use_emoji",True))
@@ -1805,6 +1932,8 @@ def format_title(original_title: str, context_text: str, settings: dict, replace
 
     if sport and settings.get("add_sport_prefix", True):
         parts.append((sport["emoji"] + " " if emoji else "") + sport.get(lang, sport["en"]))
+    elif live and settings.get("add_unknown_sport_prefix_for_live", True):
+        parts.append(("🏟️ " if emoji else "") + ("Sport" if lang == "pl" else "Sport"))
 
     new_title = " | ".join(parts + [translated]) if parts else translated
     return new_title, {
@@ -1817,6 +1946,8 @@ def format_title(original_title: str, context_text: str, settings: dict, replace
         "league_name": league["name"] if league else None,
         "stage": stage,
         "translated": changed or (base != original_title),
+        "participants_enriched": bool(participant_meta.get("has_participants")),
+        "participant_title": participant_meta.get("title"),
     }
 
 def programme_count_by_channel(root: ET.Element) -> dict[str, int]:
@@ -1920,8 +2051,36 @@ def verified_fallback_for_channel(ch_cfg: dict, roots: dict, settings: dict, ver
 
 def resolve_channel_source(ch_cfg: dict, roots: dict, settings: dict | None = None, verified_fallbacks: list[dict] | None = None) -> tuple[str | None, str | None, ET.Element | None, int, dict]:
     settings = settings or {}
-    groups = [{"source": ch_cfg.get("source"), "source_ids": ch_cfg.get("source_ids", [])}] + list(ch_cfg.get("fallback_sources", []))
     first_existing = None
+
+    # v3.18 PlusX layer: optional priority sources are tried before the normal configured source.
+    # If the priority source is unavailable or cannot be matched confidently, the existing
+    # configured source continues to act as an automatic fallback.
+    if settings.get("priority_source_autodiscovery_enabled", True):
+        for item in list(ch_cfg.get("priority_sources", [])):
+            source_name = item.get("source")
+            root = roots.get(source_name)
+            if root is None:
+                continue
+            source_id, count = choose_source_id(
+                root, item.get("source_ids", []),
+                bool(settings.get("source_prefer_nonempty_candidate", True))
+            )
+            if source_id and count > 0:
+                ch = next((x for x in root.findall("channel") if x.get("id") == source_id), None)
+                return source_name, source_id, ch, count, {
+                    "mode":"priority_configured","score":1.0,"suggestions":[],"priority_source":True
+                }
+            if item.get("autodiscover", False) and settings.get("source_autodiscovery_enabled", True):
+                auto_id, auto_count, score, suggestions = source_autodiscovery(root, ch_cfg.get("name", ""), settings)
+                if auto_id and auto_count > 0:
+                    ch = next((x for x in root.findall("channel") if x.get("id") == auto_id), None)
+                    return source_name, auto_id, ch, auto_count, {
+                        "mode":"priority_autodiscovered","score":round(score,3),
+                        "suggestions":suggestions,"priority_source":True
+                    }
+
+    groups = [{"source": ch_cfg.get("source"), "source_ids": ch_cfg.get("source_ids", [])}] + list(ch_cfg.get("fallback_sources", []))
 
     for idx, item in enumerate(groups):
         source_name = item.get("source")
@@ -2534,8 +2693,21 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
             stats["external_live_rejected_risky"] += 1
             ext = None
 
-    new_title, meta = format_title(original, context, settings, replacements, ext)
+    new_title, meta = format_title(original, context, settings, replacements, ext, external_score=ext_score if ext else None, channel_name=target_id)
     title_el.text = new_title
+    title_el.set("lang", settings.get("target_language", "pl"))
+
+    # v3.18 translated-title-only mode: keep exactly one output title. Some XMLTV
+    # sources expose the same programme title in several languages; leaving those siblings
+    # makes TiviMate display the untranslated/original title next to our Polish one.
+    if settings.get("translated_title_only", False):
+        for other_title in list(p.findall("title")):
+            if other_title is not title_el:
+                p.remove(other_title)
+        for subtitle in list(p.findall("sub-title")):
+            st_text = normalized(subtitle.text or "")
+            if (st_text and ascii_fold(st_text) == ascii_fold(original)) or re.match(r"^(?:oryginał|original)\s*:", st_text, flags=re.I):
+                p.remove(subtitle)
 
     if settings.get("preserve_original_title", True) and new_title != original and p.find("sub-title") is None:
         st = ET.SubElement(p, "sub-title", {"lang":"mul"})
@@ -2598,9 +2770,54 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
     stats["translated"] += int(meta["translated"])
     if meta["sport"]:
         stats["sports"][meta["sport"]] += 1
+    stats["participant_enriched"] = stats.get("participant_enriched", 0) + int(bool(meta.get("participants_enriched")))
     if meta["league"]:
         stats["leagues"][meta["league_name"]] += 1
     return p
+
+
+def external_snapshot_metadata(report: dict) -> dict:
+    ex = report.get("external_live", {}) or {}
+    channel_status = ex.get("channel_status") or {}
+    rows = []
+    if isinstance(channel_status, dict):
+        for cid in sorted(channel_status):
+            row = channel_status.get(cid) or {}
+            fetch_meta = row.get("fetch_meta") or {}
+            rows.append({
+                "channel_id": cid,
+                "status": row.get("status"),
+                "data_origin": row.get("data_origin"),
+                "events": row.get("events", 0),
+                "successful_url": row.get("successful_url"),
+                "fetched_at_utc": fetch_meta.get("fetched_at_utc"),
+            })
+    basis = {
+        "events_found": ex.get("events_found", 0),
+        "channels_with_events": ex.get("channels_with_events", 0),
+        "pages_current": ex.get("pages_current", 0),
+        "pages_fresh_cache": ex.get("pages_fresh_cache", 0),
+        "pages_stale_cache": ex.get("pages_stale_cache", 0),
+        "rows": rows,
+    }
+    raw = json.dumps(basis, sort_keys=True, ensure_ascii=False)
+    snapshot_id = hashlib.sha1(raw.encode("utf-8")).hexdigest()[:16] if rows else None
+    if ex.get("pages_current", 0):
+        origin = "current"
+    elif ex.get("pages_fresh_cache", 0):
+        origin = "fresh_cache"
+    elif ex.get("pages_stale_cache", 0):
+        origin = "stale_cache"
+    elif ex.get("events_found_event_lkg", 0):
+        origin = "event_lkg"
+    else:
+        origin = None
+    return {
+        "external_snapshot_id": snapshot_id,
+        "external_snapshot_origin": origin,
+        "external_snapshot_channels": len(rows),
+        "external_snapshot_events_found": ex.get("events_found", 0),
+    }
 
 
 def health_snapshot_from_report(report: dict) -> dict:
@@ -2622,6 +2839,7 @@ def health_snapshot_from_report(report: dict) -> dict:
         "external_network_failures":ex.get("network_failures",0),
         "sources":{},
     })
+    snap.update(external_snapshot_metadata(report))
     for name,row in (report.get("sources") or {}).items():
         snap["sources"][name]={
             "ok":bool(row.get("ok")),
@@ -2633,7 +2851,6 @@ def health_snapshot_from_report(report: dict) -> dict:
             "source_channels":row.get("source_channels",0),
         }
     return snap
-
 
 def _history_rows_from_file(path: Path) -> list[dict]:
     if not path.exists():
@@ -2783,20 +3000,21 @@ def _median(values):
     return vals[mid] if n%2 else (vals[mid-1]+vals[mid])/2.0
 
 
-def trend_confidence(builds: int, classification: str, persistent: bool, settings: dict) -> tuple[str,int]:
-    """Confidence grows with independent build count and persistence evidence, not effect size alone."""
+def trend_confidence(builds: int, classification: str, persistent: bool, settings: dict, independent_builds: int | None = None) -> tuple[str,int]:
+    """Confidence grows with independent evidence, not just repeated executions."""
     if not settings.get("health_trend_confidence_enabled",True):
         return "disabled",0
+    evidence_builds = max(0, int(independent_builds if independent_builds is not None else builds))
     medium_builds=max(3,int(settings.get("health_trend_confidence_medium_builds",3)))
     high_builds=max(medium_builds+1,int(settings.get("health_trend_confidence_high_builds",5)))
-    if builds < medium_builds:
-        score=max(15,min(45,15*builds))
-    elif builds < high_builds:
-        score=60 + 12*(builds-medium_builds)
+    if evidence_builds < medium_builds:
+        score=max(15,min(45,15*evidence_builds))
+    elif evidence_builds < high_builds:
+        score=60 + 12*(evidence_builds-medium_builds)
     else:
-        score=min(96,88 + 2*(builds-high_builds))
-    if classification=="single_anomaly": score-=12
-    elif classification=="persistent_regression" and persistent: score+=6
+        score=85 + min(15,3*(evidence_builds-high_builds))
+    if persistent: score+=5
+    elif classification=="single_anomaly": score+=2
     elif classification=="improving": score+=3
     score=max(0,min(100,int(round(score))))
     high=int(settings.get("health_trend_confidence_high_score",85))
@@ -2804,22 +3022,34 @@ def trend_confidence(builds: int, classification: str, persistent: bool, setting
     label="high" if score>=high else ("medium" if score>=medium else "low")
     return label,score
 
+
 def _apply_trend_confidence(result: dict, settings: dict) -> dict:
-    label,score=trend_confidence(int(result.get("builds",0)),str(result.get("classification")),bool(result.get("persistent")),settings)
+    label,score=trend_confidence(int(result.get("builds",0)),str(result.get("classification")),bool(result.get("persistent")),settings,independent_builds=int(result.get("independent_observations", result.get("builds",0)) or 0))
     result["confidence"]=label
     result["confidence_score"]=score
     return result
 
-def classify_metric_trend(name: str, values: list[float], settings: dict) -> dict:
+
+def classify_metric_trend(name: str, values: list[float], settings: dict, rows: list[dict] | None = None) -> dict:
     """Classify stable/improving/single anomaly/persistent regression.
-    The rule is deliberately conservative: persistent requires two recent bad observations
-    or a monotonic 3-point deterioration beyond the watch threshold.
+    V3.18 makes external metrics snapshot-aware so repeated builds against the same
+    cached Sport TV Guide snapshot do not overstate confidence or persistence.
     """
     n=len(values)
     min_builds=max(3,int(settings.get("health_trend_min_builds",3)))
-    result={"metric":name,"values":values,"builds":n,"classification":"insufficient_history","persistent":False,
+    snapshot_aware = name in {"external_live","external_channels_with_events","external_network_failures","external_data_age_max_hours"}
+    snapshot_ids=[]
+    if snapshot_aware and rows:
+        for row in rows:
+            sid=(row or {}).get("external_snapshot_id")
+            if sid:
+                snapshot_ids.append(sid)
+    independent=len(list(dict.fromkeys(snapshot_ids))) if snapshot_ids else n
+    result={"metric":name,"values":values,"builds":n,"independent_observations":independent,
+            "snapshot_aware":snapshot_aware,"classification":"insufficient_history","persistent":False,
             "current":values[-1] if values else None,"baseline":None,"change":0.0,"change_pct":0.0}
-    if n < min_builds: return _apply_trend_confidence(result,settings)
+    if n < min_builds:
+        return _apply_trend_confidence(result,settings)
     higher_better=name in {"external_live","external_channels_with_events","channels_active","channels_matched","quality_average"}
     lower_better=name in {"external_network_failures","external_data_age_max_hours"}
     baseline_values=values[:-1] or values
@@ -2828,7 +3058,6 @@ def classify_metric_trend(name: str, values: list[float], settings: dict) -> dic
     delta=cur-baseline; result["change"]=round(delta,3)
     if baseline:
         result["change_pct"]=round(100.0*delta/abs(baseline),1)
-    # metric-specific watch threshold
     if name=="external_live": threshold=max(1.0,baseline*float(settings.get("health_trend_external_live_watch_pct",15))/100.0)
     elif name=="external_channels_with_events": threshold=max(1.0,baseline*float(settings.get("health_trend_external_channels_watch_pct",15))/100.0)
     elif name=="channels_active": threshold=float(settings.get("health_trend_active_drop_watch",1))
@@ -2849,26 +3078,40 @@ def classify_metric_trend(name: str, values: list[float], settings: dict) -> dic
     else:
         bad=good=False; bad_fn=lambda v,b: False
     if good:
-        result["classification"]="improving"; return _apply_trend_confidence(result,settings)
-    # A three-point monotonic deterioration should count even when the median baseline
-    # is pulled toward the bad direction by the middle point.
+        result["classification"]="improving"
+        return _apply_trend_confidence(result,settings)
+
     monotonic=False
     if len(values)>=3:
         a,b,c=map(float,values[-3:])
         if higher_better: monotonic=(a>b>c and (a-c)>=threshold)
         elif lower_better: monotonic=(a<b<c and (c-a)>=threshold)
+    unique_required=max(2,int(settings.get("health_trend_external_unique_snapshots_required",2)))
     if monotonic:
-        result["persistent"]=True
-        result["classification"]="persistent_regression"
-        return _apply_trend_confidence(result,settings)
+        if snapshot_aware and rows:
+            latest_three=[r.get("external_snapshot_id") for r in rows[-3:] if r.get("external_snapshot_id")]
+            result["latest_unique_snapshots"]=len(list(dict.fromkeys(latest_three)))
+            if result["latest_unique_snapshots"] < unique_required:
+                monotonic=False
+                result["awaiting_snapshot_confirmation"]=True
+        if monotonic:
+            result["persistent"]=True
+            result["classification"]="persistent_regression"
+            return _apply_trend_confidence(result,settings)
     if not bad:
-        result["classification"]="stable"; return _apply_trend_confidence(result,settings)
-    # Otherwise persistent requires the two latest observations to be bad vs an earlier baseline.
+        result["classification"]="stable"
+        return _apply_trend_confidence(result,settings)
     persistent_points=max(2,int(settings.get("health_trend_persistent_points",2)))
     earlier=values[:-persistent_points]
     ref=_median(earlier) if earlier else baseline
     latest=values[-persistent_points:]
     both_bad=len(latest)>=persistent_points and all(bad_fn(float(v),ref) for v in latest)
+    if snapshot_aware and rows:
+        latest_ids=[r.get("external_snapshot_id") for r in rows[-persistent_points:] if r.get("external_snapshot_id")]
+        result["latest_unique_snapshots"]=len(list(dict.fromkeys(latest_ids)))
+        if both_bad and result["latest_unique_snapshots"] < unique_required:
+            both_bad=False
+            result["awaiting_snapshot_confirmation"]=True
     result["persistent"]=bool(both_bad)
     result["classification"]="persistent_regression" if result["persistent"] else "single_anomaly"
     return _apply_trend_confidence(result,settings)
@@ -2885,7 +3128,7 @@ def evaluate_health_trends(history: dict, current: dict, settings: dict) -> dict
             v=row.get(metric,0)
             try: vals.append(float(v or 0))
             except (TypeError,ValueError): vals.append(0.0)
-        evaluated.append(classify_metric_trend(metric,vals,settings))
+        evaluated.append(classify_metric_trend(metric,vals,settings,rows=rows))
     persistent=[x for x in evaluated if x.get("classification")=="persistent_regression"]
     anomalies=[x for x in evaluated if x.get("classification")=="single_anomaly"]
     improving=[x for x in evaluated if x.get("classification")=="improving"]
@@ -2895,7 +3138,7 @@ def evaluate_health_trends(history: dict, current: dict, settings: dict) -> dict
     high=int(settings.get("health_trend_confidence_high_score",85)); medium=int(settings.get("health_trend_confidence_medium_score",55))
     confidence="high" if confidence_score>=high else ("medium" if confidence_score>=medium else "low")
     return {
-        "version":"3.17","window_builds":len(rows),"configured_window":settings.get("health_trend_window_builds",5),
+        "version":"3.18","window_builds":len(rows),"configured_window":settings.get("health_trend_window_builds",5),
         "min_builds":settings.get("health_trend_min_builds",3),"status":status,
         "confidence":confidence,"confidence_score":confidence_score,
         "metrics":evaluated,"persistent_regressions":persistent,"single_anomalies":anomalies,"improving_metrics":improving,
@@ -2903,14 +3146,14 @@ def evaluate_health_trends(history: dict, current: dict, settings: dict) -> dict
                    "external_live":r.get("external_live"),"external_channels_with_events":r.get("external_channels_with_events"),
                    "channels_active":r.get("channels_active"),"channels_matched":r.get("channels_matched"),
                    "quality_average":r.get("quality_average"),"external_network_failures":r.get("external_network_failures"),
-                   "external_data_age_max_hours":r.get("external_data_age_max_hours")} for r in rows]
+                   "external_data_age_max_hours":r.get("external_data_age_max_hours"),
+                   "external_snapshot_id":r.get("external_snapshot_id"),"external_snapshot_origin":r.get("external_snapshot_origin")} for r in rows]
     }
-
 
 def calculate_health_score(alerts: list[dict], trend: dict, current: dict, settings: dict|None=None) -> tuple[int,dict]:
     """Baseline-aware operational score.
 
-    V3.17 adds a small confidence-aware penalty for one-off trend anomalies. This keeps a build
+    V3.18 keeps the confidence-aware penalty and adds snapshot-aware trend evidence for one-off trend anomalies. This keeps a build
     operationally healthy while avoiding a misleading perfect 100/100 when the trend monitor has
     already detected a meaningful deviation. Persistent regressions remain penalized more strongly.
     """
@@ -2926,7 +3169,7 @@ def calculate_health_score(alerts: list[dict], trend: dict, current: dict, setti
     persistent=len(trend.get("persistent_regressions",[]))
     components["persistent_trend_penalty"]=min(20,5*persistent); score-=components["persistent_trend_penalty"]
 
-    # A single anomaly is intentionally not promoted to a warning by itself, but v3.17 lets it
+    # A single anomaly is intentionally not promoted to a warning by itself, but v3.18 lets it
     # shave a few points off the score according to trend confidence. Low/medium/high defaults are
     # 1/4/7 points per anomaly, capped globally at 12 points.
     if settings.get("health_score_single_anomaly_penalty_enabled",True):
@@ -3103,7 +3346,7 @@ def build_health_evaluation(report: dict, settings: dict) -> tuple[dict,dict]:
     path.write_text(json.dumps(history,ensure_ascii=False,indent=2),encoding="utf-8")
 
     result={
-        "version":"3.17","generated_at_utc":current.get("generated_at_utc"),"status":status,
+        "version":"3.18","generated_at_utc":current.get("generated_at_utc"),"status":status,
         "health_score":health_score,"health_score_components":health_score_components,"trend":trend,
         "baseline_source":baseline_source,"previous_available":bool(previous),"previous":previous,
         "current":current,"comparison":comparison,"alerts":alerts,"source_regressions":source_regressions,
@@ -3155,7 +3398,7 @@ def write_status_html(path: Path, report: dict):
     top_leagues = sorted(s.get("leagues", {}).items(), key=lambda kv: kv[1], reverse=True)[:12]
     top_leagues_html = "".join(f"<li>{html.escape(k)} <b>{v}</b></li>" for k,v in top_leagues) or "<li>Brak danych</li>"
     body = f'''<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sports EPG v3.17 — status</title>
+<title>Sports EPG v3.18 — status</title>
 <style>
 body{{font-family:system-ui,-apple-system,sans-serif;margin:0;background:#f6f7f9;color:#18212f}}
 main{{max-width:1600px;margin:auto;padding:24px}} h1{{margin-bottom:4px}} .muted{{color:#667085}}
@@ -3168,7 +3411,7 @@ th{{position:sticky;top:0;background:#f9fafb;z-index:1}} tr:hover{{background:#f
 .grid2{{display:grid;grid-template-columns:2fr 1fr;gap:16px}} .panel{{background:white;border:1px solid #e4e7ec;border-radius:12px;padding:16px}}
 @media(max-width:900px){{.grid2{{grid-template-columns:1fr}}}}
 </style></head><body><main>
-<h1>Sports EPG v3.17</h1><div class="muted">Wygenerowano: {html.escape(report['generated_at_utc'])}</div>
+<h1>Sports EPG v3.18</h1><div class="muted">Wygenerowano: {html.escape(report['generated_at_utc'])}</div>
 <div class="cards">
 <div class="card"><div class="muted">Skonfigurowane</div><div class="big">{s['channels_total']}</div></div>
 <div class="card"><div class="muted">Matched</div><div class="big">{s['channels_matched']}</div></div>
@@ -3219,6 +3462,91 @@ q.addEventListener('input',f);sel.addEventListener('change',f);
 </script></main></body></html>'''
     path.write_text(body, encoding="utf-8")
 
+PLUSX_SPORT_NETWORK_TERMS = [
+    "sport", "sports", "dazn", "espn", "eurosport", "tnt", "bein", "arena", "premier sport",
+    "sky sport", "sky sports", "canal+ sport", "canal plus sport", "nova sport", "oneplay sport",
+    "sportklub", "sport klub", "polsat sport", "eleven sports", "golf channel", "tennis channel",
+    "mlb network", "nba tv", "nfl network", "nhl network", "fight network", "rds", "tsn", "sportsnet",
+    "fox sports", "cbs sports", "nbc sports", "sec network", "acc network", "big ten network", "one soccer"
+]
+
+def plusx_country_code(channel_id: str, labels: list[str]) -> str | None:
+    hay = ascii_fold(" ".join([channel_id] + labels))
+    # Common XMLTV ids end in .uk/.us/.de/.cz/.sk/.ca; also accept standalone prefixes.
+    m = re.search(r"\.(uk|gb|us|de|cz|sk|ca)(?:\b|$)", hay)
+    if m:
+        code=m.group(1)
+        return "uk" if code=="gb" else code
+    m = re.match(r"^(uk|gb|us|de|cz|sk|ca)[ .:_-]", hay)
+    if m:
+        code=m.group(1)
+        return "uk" if code=="gb" else code
+    return None
+
+def plusx_is_sport_channel(channel_id: str, labels: list[str]) -> bool:
+    hay = ascii_fold(" ".join([channel_id] + labels))
+    if any(ascii_fold(term) in hay for term in PLUSX_SPORT_NETWORK_TERMS):
+        return True
+    return sport_from_text(hay) is not None
+
+def discover_plusx_channels(root: ET.Element | None, config: dict, settings: dict) -> tuple[list[dict], dict]:
+    """Dynamically import additional sport channels from the user's PlusX XMLTV feed.
+
+    The XMLTV format itself does not expose IPTV group/category names, so v3.18 uses
+    stable country hints in tvg-id/display-name plus a conservative sports-network classifier.
+    This covers the requested SPORT + UK/US/DE/CZ/SK/CA scope without flooding the output
+    with unrelated general-entertainment channels.
+    """
+    result={"enabled":False,"source":"poland_plusx","selected_countries":[],"source_channels":0,
+            "sport_candidates":0,"added":0,"skipped_existing":0,"added_channels":[]}
+    if root is None or not settings.get("plusx_autoimport_enabled", True):
+        return [], result
+    selected={str(x).lower() for x in settings.get("plusx_autoimport_country_codes", ["uk","us","de","cz","sk","ca"])}
+    result["enabled"]=True; result["selected_countries"]=sorted(selected)
+    counts=programme_count_by_channel(root)
+    existing_ids={str(ch.get("id") or "") for ch in config.get("channels",[])}
+    existing_source_ids=set()
+    for ch in config.get("channels",[]):
+        existing_source_ids.update(str(x) for x in (ch.get("source_ids") or []))
+        for fb in ch.get("fallback_sources",[]) or []:
+            if fb.get("source")=="poland_plusx":
+                existing_source_ids.update(str(x) for x in (fb.get("source_ids") or []))
+    result["source_channels"]=len(root.findall("channel"))
+    added=[]
+    for ch in root.findall("channel"):
+        cid=ch.get("id") or ""
+        labels=[normalized(x.text or "") for x in ch.findall("display-name") if normalized(x.text or "")]
+        if not cid or counts.get(cid,0)<=0:
+            continue
+        country=plusx_country_code(cid,labels)
+        sport=plusx_is_sport_channel(cid,labels)
+        # SPORT means any confidently sport-like station; country groups add sport stations
+        # specifically from UK/US/DE/CZ/SK/CA.
+        if not sport:
+            continue
+        if country and country not in selected and not settings.get("plusx_autoimport_global_sport", True):
+            continue
+        result["sport_candidates"]+=1
+        if cid in existing_ids or cid in existing_source_ids:
+            result["skipped_existing"]+=1
+            continue
+        label=labels[0] if labels else cid.replace("."," ")
+        prefix=(country or "SPORT").upper()
+        logical_id=cid
+        row={
+            "name": f"{prefix} {label}",
+            "id": logical_id,
+            "source": "poland_plusx",
+            "source_ids": [cid],
+            "autoimported_plusx": True,
+            "plusx_country": country,
+        }
+        added.append(row)
+        result["added_channels"].append({"id":cid,"name":label,"country":country,"programmes":counts.get(cid,0)})
+    result["added"]=len(added)
+    return added,result
+
+
 def main():
     global LEAGUE_RULES
     config = load_yaml(CONFIG_FILE)
@@ -3250,8 +3578,13 @@ def main():
             errors[name] = err
             print(f"[ERROR] {name}: {err}", file=sys.stderr)
 
+    plusx_auto_channels, plusx_auto_report = discover_plusx_channels(roots.get("poland_plusx"), config, settings)
+    if plusx_auto_channels:
+        config["channels"].extend(plusx_auto_channels)
+        print(f"[PLUSX] auto-imported {len(plusx_auto_channels)} additional sport channels")
+
     report = {
-        "version":"3.17",
+        "version":"3.18",
         "generated_at_utc":datetime.now(timezone.utc).isoformat(),
         "target_language":lang,
         "settings":{
@@ -3285,6 +3618,7 @@ def main():
             "errors":[]
         },
         "cache_bootstrap":cache_bootstrap,
+        "plusx_autoimport":plusx_auto_report,
         "channels":[],
         "summary":{},
     }
@@ -3317,7 +3651,7 @@ def main():
     sportguide_catalog = load_sportguide_catalog(external_cfg)
     prime_sportguide_catalog(sportguide_catalog, external_cfg, report)
 
-    out_root = ET.Element("tv", {"generator-info-name":settings.get("generator_name","Sports EPG v3.17")})
+    out_root = ET.Element("tv", {"generator-info-name":settings.get("generator_name","Sports EPG v3.18")})
     resolved = []
     for ch_cfg in config["channels"]:
         resolved_source, source_id, source_channel, source_programme_count, resolution = resolve_channel_source(ch_cfg, roots, settings, config.get("verified_fallbacks", []))
@@ -3472,7 +3806,8 @@ def main():
         "exact_duplicates_removed": sum(q["exact_duplicates_removed"] for q in quality_rows),
         "invalid_times": sum(q["invalid_times"] for q in quality_rows),
         "mixed_offset_programmes_removed": sum(q.get("mixed_offset_programmes_removed",0) for q in quality_rows),
-        "source_autodiscovered_channels": sum(1 for x in report["channels"] if x.get("source_resolution")=="autodiscovered"),
+        "source_autodiscovered_channels": sum(1 for x in report["channels"] if x.get("source_resolution") in ("autodiscovered","priority_autodiscovered")),
+        "polish_plusx_channels_used": sum(1 for x in report["channels"] if x.get("source")=="poland_plusx"),
         "external_channels_with_events": report["external_live"].get("channels_with_events",0),
         "external_channels_current": report["external_live"].get("channels_current",0),
         "external_channels_cached": report["external_live"].get("channels_cached",0),
@@ -3572,6 +3907,8 @@ def main():
     health_file = BASE_DIR / settings.get("health_report_file", "docs/build_health.json")
     trend_file = BASE_DIR / settings.get("health_trend_report_file", "docs/build_trends.json")
     history_file = BASE_DIR / settings.get("health_history_report_file", "docs/build_history.json")
+    polish_comparison_file = BASE_DIR / settings.get("polish_source_comparison_file", "docs/polish_source_comparison.json")
+    plusx_autoimport_file = BASE_DIR / settings.get("plusx_autoimport_report_file", "docs/plusx_autoimport.json")
     out_xml.parent.mkdir(parents=True,exist_ok=True)
 
     tree = ET.ElementTree(out_root)
@@ -3581,8 +3918,37 @@ def main():
     with out_xml.open("rb") as src, gzip.open(out_gz,"wb",compresslevel=9) as dst_gz:
         dst_gz.write(src.read())
     report_file.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
-    quality_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],"channels":quality_rows},ensure_ascii=False,indent=2),encoding="utf-8")
-    live_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],"matches":all_live_matches},ensure_ascii=False,indent=2),encoding="utf-8")
+    plusx_autoimport_file.write_text(json.dumps({
+        "version":"3.18", "generated_at_utc":report["generated_at_utc"],
+        **(report.get("plusx_autoimport") or {})
+    },ensure_ascii=False,indent=2),encoding="utf-8")
+    polish_rows = [
+        {
+            "name":c.get("name"), "id":c.get("id"),
+            "configured_source":c.get("configured_source"),
+            "chosen_source":c.get("source"), "chosen_source_id":c.get("source_id"),
+            "resolution":c.get("source_resolution"),
+            "discovery_score":c.get("source_discovery_score"),
+            "programmes":c.get("programmes",0),
+            "used_plusx":c.get("source")=="poland_plusx",
+            "active":c.get("active"), "empty":c.get("empty")
+        }
+        for c in report["channels"] if str(c.get("name","")).startswith("PL ")
+    ]
+    polish_comparison_file.write_text(json.dumps({
+        "version":"3.18", "generated_at_utc":report["generated_at_utc"],
+        "priority_source":"poland_plusx",
+        "priority_source_url":config.get("sources",{}).get("poland_plusx",{}).get("url"),
+        "summary":{
+            "polish_channels":len(polish_rows),
+            "plusx_used":sum(1 for x in polish_rows if x.get("used_plusx")),
+            "fallback_used":sum(1 for x in polish_rows if not x.get("used_plusx") and x.get("active")),
+            "unmatched_or_empty":sum(1 for x in polish_rows if not x.get("active"))
+        },
+        "channels":polish_rows
+    },ensure_ascii=False,indent=2),encoding="utf-8")
+    quality_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],"channels":quality_rows},ensure_ascii=False,indent=2),encoding="utf-8")
+    live_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],"matches":all_live_matches},ensure_ascii=False,indent=2),encoding="utf-8")
     empty_rows = [
         {
             "name": c["name"], "id": c["id"], "source": c.get("source"), "source_id": c.get("source_id"),
@@ -3593,10 +3959,10 @@ def main():
         for c in report["channels"] if c.get("empty") or not c.get("matched")
     ]
     empty_file.write_text(json.dumps({
-        "version":"3.17","generated_at_utc":report["generated_at_utc"],"channels":empty_rows
+        "version":"3.18","generated_at_utc":report["generated_at_utc"],"channels":empty_rows
     },ensure_ascii=False,indent=2),encoding="utf-8")
     audit_rows = {
-        "version":"3.17","generated_at_utc":report["generated_at_utc"],
+        "version":"3.18","generated_at_utc":report["generated_at_utc"],
         "summary":dict(live_audit_counts),
         "matches":all_live_matches,
         "review": [m for m in all_live_matches if (m.get("audit") or {}).get("grade") in ("review","risky")]
@@ -3609,27 +3975,27 @@ def main():
                               "current_source_id":c.get("source_id"),
                               "same_source_suggestions":c.get("source_suggestions",[]),
                               "cross_source_recommendations":c.get("cross_source_recommendations",[])})
-    recommendations_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],
+    recommendations_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
                                                 "channels":reco_rows},ensure_ascii=False,indent=2),encoding="utf-8")
     catalog_file.write_text(json.dumps(sportguide_catalog,ensure_ascii=False,indent=2),encoding="utf-8")
-    recovery_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],
+    recovery_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
         "sources":report["sources"],
         "degraded_sources":[{"source":name,**row} for name,row in report["sources"].items() if row.get("degraded")],
         "summary":{k:v for k,v in report["summary"].items() if k.startswith("source_")}},ensure_ascii=False,indent=2),encoding="utf-8")
-    channel_recovery_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],
+    channel_recovery_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
         "recovered":[{"name":c.get("name"),"id":c.get("id"),"source":c.get("source"),"source_id":c.get("source_id"),
                       "meta":c.get("channel_lkg_meta")} for c in report["channels"] if c.get("channel_lkg_recovered")],
         "count":report["summary"].get("channel_lkg_recoveries",0)},ensure_ascii=False,indent=2),encoding="utf-8")
-    promotion_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],
+    promotion_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
         "required_builds":settings.get("recommendation_history_required_builds",3),
         "auto_apply":False,"candidates":promotion_candidates},ensure_ascii=False,indent=2),encoding="utf-8")
-    verified_fallback_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],
+    verified_fallback_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
         "approved":config.get("verified_fallbacks",[]),
         "applied":[{"name":c.get("name"),"id":c.get("id"),"source":c.get("source"),"source_id":c.get("source_id"),
                     "reason":c.get("verified_fallback_reason"),"evidence":c.get("verified_fallback_evidence")}
                    for c in report["channels"] if c.get("verified_fallback")]},ensure_ascii=False,indent=2),encoding="utf-8")
     external_recovery_file.write_text(json.dumps({
-        "version":"3.17","generated_at_utc":report["generated_at_utc"],
+        "version":"3.18","generated_at_utc":report["generated_at_utc"],
         "cache_bootstrap":cache_bootstrap,
         "summary":{
             "channels_current":report["external_live"].get("channels_current",0),
@@ -3662,7 +4028,7 @@ def main():
         "errors":report["external_live"].get("errors",[]),
     },ensure_ascii=False,indent=2),encoding="utf-8")
     health_file.write_text(json.dumps(health_report,ensure_ascii=False,indent=2),encoding="utf-8")
-    trend_file.write_text(json.dumps({"version":"3.17","generated_at_utc":report["generated_at_utc"],
+    trend_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
         "health_score":health_report.get("health_score"),"status":health_report.get("status"),
         "trend":health_report.get("trend",{}),"comparison":health_report.get("comparison",{})},ensure_ascii=False,indent=2),encoding="utf-8")
     history_file.write_text(json.dumps({"version":2,"generated_at_utc":report["generated_at_utc"],
