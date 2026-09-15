@@ -66,11 +66,11 @@ jobs:
       - run: python v315_test.py
       - run: python v316_test.py
       - run: python v317_test.py
-          python v318_test.py
-          python v318_sport_icons_test.py
-          python v318_canal_extra_test.py
-          python v318_plusx_test.py
-          python v318_plusx_expand_test.py
+      - run: python v318_test.py
+      - run: python v318_sport_icons_test.py
+      - run: python v318_canal_extra_test.py
+      - run: python v318_plusx_test.py
+      - run: python v318_plusx_expand_test.py
       - run: python epg_generator.py
 
       - name: Prepare GitHub Pages
