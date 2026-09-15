@@ -293,8 +293,8 @@ external_live:
   provider: sportguide
   request_timeout_seconds: 30
   pause_between_requests_seconds: 0.2
-  user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0 Safari/537.36
-    SportsEPG/3.13
+  user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
+    like Gecko) Chrome/151.0 Safari/537.36 SportsEPG/3.13
   cache_dir: .cache/sportguide
   cache_ttl_minutes: 60
   accept_language: en-US,en;q=0.9
@@ -456,6 +456,25 @@ channels:
   - SK10.ba
   - SK.10.HD.(SR).ba
   external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-10
+- name: HR Max Sport 1
+  id: maxsport1.hr
+  source: sportklub
+  source_ids:
+  - MAXSport.1.HD.hr
+  - MAX.Sport.1.HD.hr
+  - MAXSport1.hr
+  - MaxSport.1.hr
+  priority_sources:
+  - source: sportklub
+    source_ids:
+    - MAXSport.1.HD.hr
+    - MAX.Sport.1.HD.hr
+    - MAXSport1.hr
+    - MaxSport.1.hr
+    autodiscover: true
+  external_live_urls:
+  - https://sport-tv-guide.live/tv-guide-live/cro-maxsport-1
+  - https://sport-tv-guide.live/tv-guide-live/cro-max-sport-1
 - name: SR Arena Sport 1
   id: arenasport1.rs
   source: arena_rs
@@ -486,6 +505,81 @@ channels:
   source_ids:
   - Arena.Sport.5.HD.(RS).rs
   external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-5
+- name: SR Arena Sport 6
+  id: arenasport6.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.6.HD.(RS).rs
+  - Arena.Sport.6.HD.rs
+  - Arena.Sport.6.rs
+  priority_sources:
+  - source: arena_rs
+    source_ids:
+    - Arena.Sport.6.HD.(RS).rs
+    - Arena.Sport.6.HD.rs
+    - Arena.Sport.6.rs
+    autodiscover: true
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-6
+- name: SR Arena Sport 7
+  id: arenasport7.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.7.HD.(RS).rs
+  - Arena.Sport.7.HD.rs
+  - Arena.Sport.7.rs
+  priority_sources:
+  - source: arena_rs
+    source_ids:
+    - Arena.Sport.7.HD.(RS).rs
+    - Arena.Sport.7.HD.rs
+    - Arena.Sport.7.rs
+    autodiscover: true
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-7
+- name: SR Arena Sport 8
+  id: arenasport8.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.8.HD.(RS).rs
+  - Arena.Sport.8.HD.rs
+  - Arena.Sport.8.rs
+  priority_sources:
+  - source: arena_rs
+    source_ids:
+    - Arena.Sport.8.HD.(RS).rs
+    - Arena.Sport.8.HD.rs
+    - Arena.Sport.8.rs
+    autodiscover: true
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-8
+- name: SR Arena Sport 9
+  id: arenasport9.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.9.HD.(RS).rs
+  - Arena.Sport.9.HD.rs
+  - Arena.Sport.9.rs
+  priority_sources:
+  - source: arena_rs
+    source_ids:
+    - Arena.Sport.9.HD.(RS).rs
+    - Arena.Sport.9.HD.rs
+    - Arena.Sport.9.rs
+    autodiscover: true
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-9
+- name: SR Arena Sport 10
+  id: arenasport10.rs
+  source: arena_rs
+  source_ids:
+  - Arena.Sport.10.HD.(RS).rs
+  - Arena.Sport.10.HD.rs
+  - Arena.Sport.10.rs
+  priority_sources:
+  - source: arena_rs
+    source_ids:
+    - Arena.Sport.10.HD.(RS).rs
+    - Arena.Sport.10.HD.rs
+    - Arena.Sport.10.rs
+    autodiscover: true
+  external_live_url: https://sport-tv-guide.live/tv-guide-live/rs-arena-sport-10
 - name: PT SPORT TV 1
   id: sporttv1.pt
   source: portugal

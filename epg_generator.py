@@ -32,32 +32,36 @@ LEAGUE_RULES = []
 
 SPORTS = [
     {"key":"football","pl":"Piłka nożna","en":"Football","emoji":"⚽",
-     "terms":["nogomet","fudbal","football","soccer","premier league","la liga","serie a",
+     "terms":["piłka nożna","mecz piłkarski","nogomet","fudbal","football","soccer","premier league","la liga","serie a",
               "bundesliga","champions league","europa league","conference league","liga prvaka",
               "uefa","fifa","ekstraklasa","super liga","superliga","fotbal","futbal","labdarúgás","fodbold","fotboll","fotball","jalkapallo","futbol"]},
     {"key":"basketball","pl":"Koszykówka","en":"Basketball","emoji":"🏀",
-     "terms":["košarka","kosarka","basketball","nba","euroleague","eurocup","aba liga","basket league","basketbal","kosárlabda","basketbol"]},
+     "terms":["koszykówka","koszykarska","košarka","kosarka","basketball","nba","euroleague","eurocup","aba liga","basket league","basketbal","kosárlabda","basketbol"]},
     {"key":"baseball","pl":"Baseball","en":"Baseball","emoji":"⚾",
      "terms":["baseball","mlb","major league baseball","world series"]},
     {"key":"american_football","pl":"Futbol amerykański","en":"American football","emoji":"🏈",
      "terms":["american football","nfl","ncaa football","college football","super bowl"]},
     {"key":"tennis","pl":"Tenis","en":"Tennis","emoji":"🎾",
-     "terms":["tenis","tennis","atp ","wta ","roland garros","wimbledon","us open","australian open"]},
+     "terms":["tenis","turniej tenisowy","tennis","atp ","wta ","roland garros","wimbledon","us open","australian open"]},
     {"key":"volleyball","pl":"Siatkówka","en":"Volleyball","emoji":"🏐",
-     "terms":["odbojka","volleyball","cev","vnl","volejbal","röplabda","volleyboll","lentopallo","voleybol"]},
+     "terms":["siatkówka","siatkarska","plusliga","tauron liga","odbojka","volleyball","cev","vnl","volejbal","röplabda","volleyboll","lentopallo","voleybol"]},
     {"key":"handball","pl":"Piłka ręczna","en":"Handball","emoji":"🤾",
-     "terms":["rukomet","handball","ehf","házená","hádzaná","kézilabda","håndbold","håndball","handboll","käsipallo","hentbol"]},
+     "terms":["piłka ręczna","szczypiorniak","orlen superliga","rukomet","handball","ehf","házená","hádzaná","kézilabda","håndbold","håndball","handboll","käsipallo","hentbol"]},
     {"key":"hockey","pl":"Hokej","en":"Hockey","emoji":"🏒",
-     "terms":["hokej","hockey","nhl","khl","lední hokej","ľadový hokej","jégkorong","ishockey","jääkiekko"]},
+     "terms":["hokej","hokej na lodzie","hockey","nhl","khl","lední hokej","ľadový hokej","jégkorong","ishockey","jääkiekko"]},
     {"key":"motorsport","pl":"Motorsport","en":"Motorsport","emoji":"🏎️",
-     "terms":["formula 1","formula 2","formula 3","f1 ","f2 ","motogp","moto gp","wrc","nascar","indycar","motorsport"]},
+     "terms":["formuła 1","formula 1","formula 2","formula 3","f1 ","f2 ","motogp","moto gp","wrc","nascar","indycar","motorsport"]},
+    {"key":"speedway","pl":"Żużel","en":"Speedway","emoji":"🏍️",
+     "terms":["żużel","zuzel","speedway","pge ekstraliga","metalkas 2. ekstraliga","metalkas 2 ekstraliga"]},
+    {"key":"motocross","pl":"Motocross","en":"Motocross","emoji":"🏍️",
+     "terms":["motocross","mxgp","mx2","fim motocross"]},
     {"key":"water_polo","pl":"Piłka wodna","en":"Water polo","emoji":"🤽",
      "terms":["vaterpolo","water polo"]},
-    {"key":"boxing","pl":"Boks","en":"Boxing","emoji":"🥊","terms":["boks","boxing"]},
-    {"key":"mma","pl":"MMA","en":"MMA","emoji":"🥋","terms":["mma","ufc","pfl"]},
-    {"key":"athletics","pl":"Lekkoatletyka","en":"Athletics","emoji":"🏃","terms":["atletika","athletics","diamond league","maraton"]},
-    {"key":"cycling","pl":"Kolarstwo","en":"Cycling","emoji":"🚴","terms":["biciklizam","cycling","tour de france","giro d'italia","vuelta","cyklistika","cykling","sykling","pyöräily"]},
-    {"key":"skiing","pl":"Narciarstwo","en":"Skiing","emoji":"⛷️","terms":["skijanje","skiing","alpine ski"]},
+    {"key":"boxing","pl":"Boks","en":"Boxing","emoji":"🥊","terms":["boks","walka bokserska","boxing"]},
+    {"key":"mma","pl":"MMA","en":"MMA","emoji":"🥋","terms":["mma","ksw","ufc","pfl"]},
+    {"key":"athletics","pl":"Lekkoatletyka","en":"Athletics","emoji":"🏃","terms":["lekkoatletyka","atletika","athletics","diamond league","maraton"]},
+    {"key":"cycling","pl":"Kolarstwo","en":"Cycling","emoji":"🚴","terms":["kolarstwo","biciklizam","cycling","tour de france","giro d'italia","vuelta","cyklistika","cykling","sykling","pyöräily"]},
+    {"key":"skiing","pl":"Narciarstwo","en":"Skiing","emoji":"⛷️","terms":["narciarstwo","skijanje","skiing","alpine ski"]},
     {"key":"darts","pl":"Dart","en":"Darts","emoji":"🎯","terms":["darts","world darts championship"]},
     {"key":"snooker","pl":"Snooker","en":"Snooker","emoji":"🎱","terms":["snooker"]},
     {"key":"golf","pl":"Golf","en":"Golf","emoji":"⛳","terms":["golf","golfe","pga","liv golf"]},
@@ -107,7 +111,11 @@ def normalized(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 def ascii_fold(text: str) -> str:
-    text = unicodedata.normalize("NFKD", normalized(text))
+    text = normalized(text).translate(str.maketrans({
+        "ł":"l", "Ł":"L", "đ":"d", "Đ":"D", "ð":"d", "Ð":"D",
+        "þ":"th", "Þ":"Th", "æ":"ae", "Æ":"AE", "ø":"o", "Ø":"O",
+    }))
+    text = unicodedata.normalize("NFKD", text)
     return "".join(c for c in text if not unicodedata.combining(c)).lower()
 
 def token_set(text: str) -> set[str]:
@@ -171,11 +179,64 @@ def localize_datetime(dt: datetime | None, tz_name: str | None) -> datetime | No
 def contains_any(text: str, patterns) -> bool:
     return any(re.search(p, text, flags=re.IGNORECASE) for p in patterns)
 
+SPORT_STRONG_PATTERNS = [
+    ("volleyball", [
+        r"\bsiatkowk[aiy]\b", r"\bsiatkarsk(?:a|i|ie|iej|ich)?\b", r"\bplusliga\b", r"\btauron liga\b",
+        r"\bvolleyball\b", r"\bvolley\b", r"\bcev\b", r"\bvnl\b", r"\bvolleyball nations league\b",
+        r"\bodbojka\b", r"\bvolejbal\b", r"\broplabda\b", r"\bvoleybol\b", r"\blentopallo\b"
+    ]),
+    ("handball", [
+        r"\bpilka reczna\b", r"\bszczypiorniak\b", r"\breczna\b", r"\bhandball\b", r"\behf\b",
+        r"\borlen superliga\b", r"\bsuperliga kobiet\b", r"\brukomet\b", r"\bhazena\b", r"\bhadzana\b",
+        r"\bkezilabda\b", r"\bhandbold\b", r"\bhandball\b", r"\bhandboll\b", r"\bkasipallo\b", r"\bhentbol\b"
+    ]),
+    ("basketball", [
+        r"\bkoszykowk[aiy]\b", r"\bkoszykarsk(?:a|i|ie|iej|ich)?\b", r"\bbasketball\b", r"\bnba\b",
+        r"\beuroleague\b", r"\beurocup\b", r"\baba liga\b", r"\bplk\b", r"\born basket liga\b"
+    ]),
+    ("hockey", [r"\bhokej\b", r"\bhockey\b", r"\bnhl\b", r"\bkhl\b", r"\bdel hockey\b", r"\bliiga\b", r"\bshl\b"]),
+    ("tennis", [r"\btenis\b", r"\btennis\b", r"\batp\b", r"\bwta\b", r"\bwimbledon\b", r"\broland garros\b", r"\baustralian open\b", r"\bus open\b"]),
+    ("american_football", [r"\bfutbol amerykanski\b", r"\bamerican football\b", r"\bnfl\b", r"\bsuper bowl\b", r"\bncaa football\b", r"\bcollege football\b"]),
+    ("baseball", [r"\bbaseball\b", r"\bmlb\b", r"\bmajor league baseball\b", r"\bworld series\b"]),
+    ("motorsport", [r"\bformula 1\b", r"\bformula one\b", r"\bformula 1 grand prix\b", r"\bformu[lł]a 1\b", r"\bf1\b", r"\bformula 2\b", r"\bf2\b", r"\bmotogp\b", r"\bwrc\b", r"\bnascar\b", r"\bindycar\b", r"\bmotorsport\b"]),
+    ("speedway", [r"\bzuzel\b", r"\bspeedway\b", r"\bpge ekstraliga\b", r"\bmetalkas 2\.? ekstraliga\b", r"\bpolfinal ekstraligi\b", r"\bfinal ekstraligi\b"]),
+    ("motocross", [r"\bmotocross\b", r"\bmotocross world\b", r"\bmxgp\b", r"\bmx2\b", r"\bfim motocross\b"]),
+    ("boxing", [r"\bboks\b", r"\bboxing\b"]),
+    ("mma", [r"\bmma\b", r"\bufc\b", r"\bpfl\b", r"\bksw\b"]),
+    ("cycling", [r"\bkolarstw[oa]\b", r"\bcycling\b", r"\btour de france\b", r"\bgiro d[' ]?[a-z]+\b", r"\bgiro d'italia\b", r"\bvuelta\b"]),
+    ("athletics", [r"\blekkoatletyk[ai]\b", r"\bathletics\b", r"\bdiamond league\b", r"\bmaraton\b", r"\bmarathon\b"]),
+    ("skiing", [r"\bnarciarstwow?\b", r"\bskiing\b", r"\balpine ski\b", r"\bslalom\b"]),
+    ("darts", [r"\bdart(?:s)?\b"]),
+    ("snooker", [r"\bsnooker\b"]),
+    ("golf", [r"\bgolf\b", r"\bpga\b", r"\bliv golf\b"]),
+    ("rugby", [r"\brugby\b"]),
+    ("water_polo", [r"\bpilka wodna\b", r"\bwater polo\b", r"\bvaterpolo\b"]),
+    ("football", [
+        r"\bpilka nozna\b", r"\bmecz pilkarski\b", r"\bfootball\b", r"\bsoccer\b", r"\bfutbol\b",
+        r"\bpremier league\b", r"\bla liga\b", r"\bliga hiszpanska\b", r"\bserie a\b", r"\bliga wloska\b",
+        r"\bbundesliga\b", r"\bliga niemiecka\b", r"\bliga portugalska\b", r"\bliga portugal(?: betclic)?\b", r"\bprimeira liga\b", r"\bekstraklasa\b",
+        r"\bchampions league\b", r"\beuropa league\b", r"\bconference league\b", r"\buefa\b", r"\bfifa\b"
+    ]),
+]
+
 def sport_from_text(text: str):
-    hay = ascii_fold(text)
+    """Deterministic sport classifier with high-signal aliases first.
+
+    v3.18: uses word-boundary patterns and Polish competition names so sport icons are
+    consistently added even when programme titles are short or already translated.
+    """
+    hay = ascii_fold(text or "")
+    for key, patterns in SPORT_STRONG_PATTERNS:
+        if any(re.search(p, hay, flags=re.I) for p in patterns):
+            return next((s for s in SPORTS if s["key"] == key), None)
+    # Conservative fallback to legacy aliases, now using token boundaries where possible.
     for sport in SPORTS:
-        if any(ascii_fold(term) in hay for term in sport["terms"]):
-            return sport
+        for term in sport.get("terms", []):
+            folded = ascii_fold(term).strip()
+            if not folded:
+                continue
+            if re.search(r"(?<![a-z0-9])" + re.escape(folded) + r"(?![a-z0-9])", hay, flags=re.I):
+                return sport
     return None
 
 def league_from_text(text: str):

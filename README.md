@@ -24,3 +24,8 @@ XMLTV nie przechowuje typowej nazwy grupy IPTV typu `SPORT`, `UK`, `US` itd. Dla
 ## Canal+ Extra 1–7
 
 Dodano ręcznie kanały `PL CANAL+ EXTRA 1` … `PL CANAL+ EXTRA 7` z priorytetowym źródłem `poland_plusx` (`http://list.plusx.tv/pl10.gz`). Każdy kanał ma kilka wariantów możliwego `source_id` oraz `autodiscover: true`, dzięki czemu generator może odnaleźć właściwy identyfikator nawet wtedy, gdy PlusX używa innego zapisu nazwy.
+
+## Korekta źródeł Arena/Max Sport
+- SR Arena Sport 6–10: tylko źródło `arena_rs`; usunięto błędny fallback do PlusX.
+- HR Max Sport 1: tylko źródło `sportklub`; usunięto błędne odwołanie do PlusX.
+- Jeżeli kanału nie ma w realnym feedzie źródłowym, generator pozostawi go jako brakujący zamiast sztucznie dopasowywać do PlusX.
