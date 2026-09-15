@@ -178,6 +178,10 @@ sources:
     url: https://epgshare01.online/epgshare01/epg_ripper_SPORTKLUB1.xml.gz
     timezone: Europe/Zagreb
     sportguide_country: cro
+  maxtv_hr:
+    url: https://iptv-org.github.io/epg/guides/hr/maxtv.hrvatskitelekom.hr.xml
+    timezone: Europe/Zagreb
+    sportguide_country: cro
   arena_rs:
     url: https://epgshare01.online/epgshare01/epg_ripper_RS1.xml.gz
     timezone: Europe/Belgrade
@@ -458,19 +462,19 @@ channels:
   external_live_url: https://sport-tv-guide.live/tv-guide-live/cro-sportklub-10
 - name: HR Max Sport 1
   id: maxsport1.hr
-  source: sportklub
+  source: maxtv_hr
   source_ids:
-  - MAXSport.1.HD.hr
-  - MAX.Sport.1.HD.hr
+  - MaxSport1.hr
   - MAXSport1.hr
-  - MaxSport.1.hr
+  - MAXSport 1
+  - MaxSport 1
   priority_sources:
-  - source: sportklub
+  - source: maxtv_hr
     source_ids:
-    - MAXSport.1.HD.hr
-    - MAX.Sport.1.HD.hr
+    - MaxSport1.hr
     - MAXSport1.hr
-    - MaxSport.1.hr
+    - MAXSport 1
+    - MaxSport 1
     autodiscover: true
   external_live_urls:
   - https://sport-tv-guide.live/tv-guide-live/cro-maxsport-1

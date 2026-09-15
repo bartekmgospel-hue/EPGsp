@@ -29,3 +29,12 @@ Dodano ręcznie kanały `PL CANAL+ EXTRA 1` … `PL CANAL+ EXTRA 7` z prioryteto
 - SR Arena Sport 6–10: tylko źródło `arena_rs`; usunięto błędny fallback do PlusX.
 - HR Max Sport 1: tylko źródło `sportklub`; usunięto błędne odwołanie do PlusX.
 - Jeżeli kanału nie ma w realnym feedzie źródłowym, generator pozostawi go jako brakujący zamiast sztucznie dopasowywać do PlusX.
+
+
+## MAXSport 1 — nowe źródło
+
+Dla kanału **HR Max Sport 1** głównym źródłem EPG jest teraz:
+
+`https://iptv-org.github.io/epg/guides/hr/maxtv.hrvatskitelekom.hr.xml`
+
+Źródło: MAXtv / Hrvatski Telekom (mirror iptv-org). Priorytetowy identyfikator XMLTV: `MaxSport1.hr`.
