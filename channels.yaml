@@ -164,7 +164,13 @@ settings:
   polish_source_comparison_file: docs/polish_source_comparison.json
   plusx_autoimport_enabled: true
   plusx_autoimport_global_sport: true
-  plusx_autoimport_country_codes: [uk, us, de, cz, sk, ca]
+  plusx_autoimport_country_codes:
+  - uk
+  - us
+  - de
+  - cz
+  - sk
+  - ca
   plusx_autoimport_report_file: docs/plusx_autoimport.json
   priority_source_autodiscovery_enabled: true
 sources:
@@ -684,6 +690,166 @@ channels:
     source_ids:
     - CANAL+.Sport.5.HD.pl
     - CANAL+.Sport.5.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA
+  id: canalplusextra.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.HD.pl
+  - CANAL+.Extra.pl
+  - Canal+.Extra.HD.pl
+  - Canal+.Extra.pl
+  - CANAL+Extra.pl
+  - Canal+Extra.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.HD.pl
+    - CANAL+.Extra.pl
+    - Canal+.Extra.HD.pl
+    - Canal+.Extra.pl
+    - CANAL+Extra.pl
+    - Canal+Extra.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA 1
+  id: canalplusextra1.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.1.HD.pl
+  - CANAL+.Extra.1.pl
+  - Canal+.Extra.1.HD.pl
+  - Canal+.Extra.1.pl
+  - CANAL+Extra1.pl
+  - Canal+Extra1.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.1.HD.pl
+    - CANAL+.Extra.1.pl
+    - Canal+.Extra.1.HD.pl
+    - Canal+.Extra.1.pl
+    - CANAL+Extra1.pl
+    - Canal+Extra1.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA 2
+  id: canalplusextra2.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.2.HD.pl
+  - CANAL+.Extra.2.pl
+  - Canal+.Extra.2.HD.pl
+  - Canal+.Extra.2.pl
+  - CANAL+Extra2.pl
+  - Canal+Extra2.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.2.HD.pl
+    - CANAL+.Extra.2.pl
+    - Canal+.Extra.2.HD.pl
+    - Canal+.Extra.2.pl
+    - CANAL+Extra2.pl
+    - Canal+Extra2.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA 3
+  id: canalplusextra3.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.3.HD.pl
+  - CANAL+.Extra.3.pl
+  - Canal+.Extra.3.HD.pl
+  - Canal+.Extra.3.pl
+  - CANAL+Extra3.pl
+  - Canal+Extra3.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.3.HD.pl
+    - CANAL+.Extra.3.pl
+    - Canal+.Extra.3.HD.pl
+    - Canal+.Extra.3.pl
+    - CANAL+Extra3.pl
+    - Canal+Extra3.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA 4
+  id: canalplusextra4.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.4.HD.pl
+  - CANAL+.Extra.4.pl
+  - Canal+.Extra.4.HD.pl
+  - Canal+.Extra.4.pl
+  - CANAL+Extra4.pl
+  - Canal+Extra4.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.4.HD.pl
+    - CANAL+.Extra.4.pl
+    - Canal+.Extra.4.HD.pl
+    - Canal+.Extra.4.pl
+    - CANAL+Extra4.pl
+    - Canal+Extra4.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA 5
+  id: canalplusextra5.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.5.HD.pl
+  - CANAL+.Extra.5.pl
+  - Canal+.Extra.5.HD.pl
+  - Canal+.Extra.5.pl
+  - CANAL+Extra5.pl
+  - Canal+Extra5.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.5.HD.pl
+    - CANAL+.Extra.5.pl
+    - Canal+.Extra.5.HD.pl
+    - Canal+.Extra.5.pl
+    - CANAL+Extra5.pl
+    - Canal+Extra5.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA 6
+  id: canalplusextra6.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.6.HD.pl
+  - CANAL+.Extra.6.pl
+  - Canal+.Extra.6.HD.pl
+  - Canal+.Extra.6.pl
+  - CANAL+Extra6.pl
+  - Canal+Extra6.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.6.HD.pl
+    - CANAL+.Extra.6.pl
+    - Canal+.Extra.6.HD.pl
+    - Canal+.Extra.6.pl
+    - CANAL+Extra6.pl
+    - Canal+Extra6.pl
+    autodiscover: true
+- name: PL CANAL+ EXTRA 7
+  id: canalplusextra7.pl
+  source: poland_plusx
+  source_ids:
+  - CANAL+.Extra.7.HD.pl
+  - CANAL+.Extra.7.pl
+  - Canal+.Extra.7.HD.pl
+  - Canal+.Extra.7.pl
+  - CANAL+Extra7.pl
+  - Canal+Extra7.pl
+  priority_sources:
+  - source: poland_plusx
+    source_ids:
+    - CANAL+.Extra.7.HD.pl
+    - CANAL+.Extra.7.pl
+    - Canal+.Extra.7.HD.pl
+    - Canal+.Extra.7.pl
+    - CANAL+Extra7.pl
+    - Canal+Extra7.pl
     autodiscover: true
 - name: PL ELEVEN SPORTS 1
   id: elevensports1.pl

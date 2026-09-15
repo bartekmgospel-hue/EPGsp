@@ -270,3 +270,10 @@ US ACC NETWORK -> accnetwork.us
 US beIN SPORTS -> beinsports.us
 US TUDN -> tudn.us
 US FOX SOCCER PLUS -> foxsoccerplus.us
+canalplusextra1.pl
+canalplusextra2.pl
+canalplusextra3.pl
+canalplusextra4.pl
+canalplusextra5.pl
+canalplusextra6.pl
+canalplusextra7.pl

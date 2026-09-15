@@ -20,3 +20,7 @@ XMLTV nie przechowuje typowej nazwy grupy IPTV typu `SPORT`, `UK`, `US` itd. Dla
 - ikony sportów i LIVE
 - wzbogacanie tytułów o drużyny/zawodników
 - snapshot-aware External LIVE monitoring
+
+## Canal+ Extra 1–7
+
+Dodano ręcznie kanały `PL CANAL+ EXTRA 1` … `PL CANAL+ EXTRA 7` z priorytetowym źródłem `poland_plusx` (`http://list.plusx.tv/pl10.gz`). Każdy kanał ma kilka wariantów możliwego `source_id` oraz `autodiscover: true`, dzięki czemu generator może odnaleźć właściwy identyfikator nawet wtedy, gdy PlusX używa innego zapisu nazwy.
