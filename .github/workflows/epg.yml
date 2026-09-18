@@ -67,6 +67,7 @@ jobs:
       - run: python v316_test.py
       - run: python v317_test.py
       - run: python v318_test.py
+          python v318_livefix_test.py
       - run: python v318_sport_icons_test.py
       - run: python v318_canal_extra_test.py
       - run: python v318_plusx_test.py
