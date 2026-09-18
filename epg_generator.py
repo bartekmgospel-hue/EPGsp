@@ -75,7 +75,9 @@ LIVE_EXPLICIT = [
 ]
 REPLAY_TERMS = [
     r"\brepriza\b", r"\bsnimka\b", r"\breplay\b", r"\brerun\b",
-    r"\bponovljeno\b", r"\bhighlights\b", r"\bpregled\b", r"\brepetição\b", r"\brepeticion\b", r"\brepetición\b", r"\bwiederholung\b", r"\bherhaling\b", r"\bzáznam\b", r"\bismétlés\b", r"\btekrar\b", r"\brepris\b", r"\bgenudsendelse\b", r"\buusinta\b"
+    r"\bponovljeno\b", r"\bhighlights\b", r"\bpregled\b", r"\brepetição\b", r"\brepeticion\b", r"\brepetición\b", r"\bwiederholung\b", r"\bherhaling\b", r"\bzáznam\b", r"\bismétlés\b", r"\btekrar\b", r"\brepris\b", r"\bgenudsendelse\b", r"\buusinta\b",
+    r"\bpowt[oó]rka\b", r"\bpowt\.?\b", r"\bretransmisja\b", r"\bzapis(?: meczu| spotkania| transmisji)?\b",
+    r"\barchiwum\b", r"\bpowt[oó]rzenie\b", r"\bre-live\b", r"\brecorded\b", r"\bencore\b"
 ]
 STAGES = [
     ("final", [r"\bfinale\b", r"\bfinal\b"]),
@@ -318,6 +320,78 @@ def parse_xmltv_datetime(value: str) -> datetime | None:
 
 def detect_explicit_live(text: str) -> bool:
     return (not contains_any(text, REPLAY_TERMS)) and contains_any(text, LIVE_EXPLICIT)
+
+EUROPEAN_MORNING_REPLAY_HINTS = [
+    r"\bekstraklasa\b", r"\bpko bp ekstraklasa\b", r"\b1 liga\b", r"\b2 liga\b",
+    r"\bpremier league\b", r"\bla liga\b", r"\bliga hiszpa[nń]ska\b", r"\bserie a\b",
+    r"\bliga w[lł]oska\b", r"\bbundesliga\b", r"\bliga niemiecka\b", r"\bligue 1\b",
+    r"\bliga portugal\b", r"\bliga portugalska\b", r"\bchampions league\b",
+    r"\bliga mistrz[oó]w\b", r"\beuropa league\b", r"\bliga europy\b",
+    r"\bconference league\b", r"\bliga konferencji\b", r"\bpge ekstraliga\b",
+    r"\bmetalkas 2\.? ekstraliga\b", r"\borlen superliga\b", r"\bplusliga\b"
+]
+
+EVENT_LIKE_TERMS = [
+    r"\bmecz\b", r"\bvs\.?\b", r"\bv\.?\b", r"\s[-–—]\s", r"\bgrand prix\b",
+    r"\bp[oó][lł]fina[lł]\b", r"\b[fć]wier[cć]fina[lł]\b", r"\bfina[lł]\b",
+    r"\bkolejka\b", r"\bturniej\b", r"\bwy[sś]cig\b", r"\betap\b"
+]
+
+def programme_local_time(prog_dt: datetime | None, station_timezone: str | None) -> datetime | None:
+    return localize_datetime(prog_dt, station_timezone) if prog_dt is not None else None
+
+def suspicious_morning_replay(text: str, prog_dt: datetime | None, station_timezone: str | None,
+                              external_match: dict | None = None) -> bool:
+    """Suppress misleading LIVE labels on overnight/morning reruns of European sports.
+    A confident external event match always wins over this heuristic.
+    """
+    if external_match is not None:
+        return False
+    local = programme_local_time(prog_dt, station_timezone)
+    if local is None:
+        return False
+    hour = local.hour + local.minute / 60.0
+    if not (4.0 <= hour < 10.5):
+        return False
+    hay = ascii_fold(text)
+    return any(re.search(p, hay, flags=re.I) for p in EUROPEAN_MORNING_REPLAY_HINTS)
+
+def infer_likely_live_event(text: str, prog_dt: datetime | None, stop_dt: datetime | None,
+                            station_timezone: str | None, external_match: dict | None = None) -> bool:
+    """Conservative fallback for programmes that look like a live sporting event but lack a LIVE token.
+    Used mostly for Polish/local XMLTV feeds. Morning reruns are intentionally excluded.
+    """
+    if external_match is not None:
+        return True
+    if contains_any(text, REPLAY_TERMS):
+        return False
+    sport = sport_from_text(text)
+    if not sport:
+        return False
+    if not contains_any(text, EVENT_LIKE_TERMS):
+        return False
+    local = programme_local_time(prog_dt, station_timezone)
+    if local is None:
+        return False
+    hour = local.hour + local.minute / 60.0
+    # Domestic/European sports are very rarely live in the early morning.
+    if suspicious_morning_replay(text, prog_dt, station_timezone, None):
+        return False
+    earliest = {
+        "football": 10.5, "volleyball": 9.5, "handball": 9.5, "speedway": 10.0,
+        "motorsport": 7.0, "motocross": 7.0, "cycling": 8.0, "tennis": 7.0,
+        "basketball": 9.0, "hockey": 9.0,
+    }.get(sport.get("key"), 8.0)
+    if hour < earliest or hour >= 24.0:
+        return False
+    if stop_dt is not None and prog_dt is not None:
+        try:
+            dur = (stop_dt - prog_dt).total_seconds() / 60.0
+            if dur < 30 or dur > 360:
+                return False
+        except Exception:
+            pass
+    return True
 
 def fetch_bytes(url: str, timeout: int = 60, user_agent: str = "SportsEPG-v2/2.0") -> bytes:
     r = requests.get(url, timeout=timeout, headers={"User-Agent": user_agent})
@@ -1795,6 +1869,11 @@ def best_external_match(title: str, prog_date, events: list[dict], min_score: fl
             score = max(score, 0.61)
         if same_league and time_delta is not None and time_delta <= time_tolerance_minutes and entity_overlap >= 1:
             score = max(score, 0.66)
+        # Translation-independent safety net: one shared participant + same sport + very close time
+        # is often enough to identify the same live fixture even when the competition/title language differs.
+        if same_sport and entity_overlap >= 1 and time_delta is not None and time_delta <= 45:
+            score = max(score, 0.68)
+            bonuses.append("participant_time_strong")
 
         if ev.get("source") == "manual":
             score = max(score, 0.95)
@@ -1958,12 +2037,18 @@ def should_prefer_external_title(original_title: str, translated_title: str, ext
 
 def format_title(original_title: str, context_text: str, settings: dict, replacements: dict,
                  external_match: dict|None = None, external_score: float | None = None,
-                 channel_name: str | None = None) -> tuple[str,dict]:
+                 channel_name: str | None = None, prog_dt: datetime | None = None,
+                 stop_dt: datetime | None = None, station_timezone: str | None = None) -> tuple[str,dict]:
     external_title = external_match.get("title","") if external_match else ""
     context = normalized(" ".join([original_title, context_text, external_title, channel_name or ""]))
     replay = contains_any(context, REPLAY_TERMS)
-    explicit_live = detect_explicit_live(context)
-    live = (external_match is not None or explicit_live) and not replay
+    explicit_live_raw = detect_explicit_live(context)
+    morning_guard = suspicious_morning_replay(context, prog_dt, station_timezone, external_match)
+    inferred_live = infer_likely_live_event(context, prog_dt, stop_dt, station_timezone, external_match)
+    explicit_live = bool(explicit_live_raw and not morning_guard and not replay)
+    if morning_guard and explicit_live_raw:
+        replay = True
+    live = (external_match is not None or explicit_live or inferred_live) and not replay
 
     sport = sport_from_text(context) or fallback_sport_from_channel(channel_name)
     league = league_from_text(context)
@@ -2009,6 +2094,8 @@ def format_title(original_title: str, context_text: str, settings: dict, replace
         "translated": changed or (base != original_title),
         "participants_enriched": bool(participant_meta.get("has_participants")),
         "participant_title": participant_meta.get("title"),
+        "live_inferred": bool(inferred_live and external_match is None and not explicit_live),
+        "live_morning_suppressed": bool(morning_guard and explicit_live_raw),
     }
 
 def programme_count_by_channel(root: ET.Element) -> dict[str, int]:
@@ -2731,6 +2818,7 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
     context = " ".join([desc, cats])
 
     start_dt = parse_xmltv_datetime(p.get("start", ""))
+    stop_dt = parse_xmltv_datetime(p.get("stop", ""))
     prog_date = start_dt.date() if start_dt else None
     ext, ext_score, match_details = best_external_match(
         original,
@@ -2754,7 +2842,7 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
             stats["external_live_rejected_risky"] += 1
             ext = None
 
-    new_title, meta = format_title(original, context, settings, replacements, ext, external_score=ext_score if ext else None, channel_name=target_id)
+    new_title, meta = format_title(original, context, settings, replacements, ext, external_score=ext_score if ext else None, channel_name=target_id, prog_dt=start_dt, stop_dt=stop_dt, station_timezone=station_timezone)
     title_el.text = new_title
     title_el.set("lang", settings.get("target_language", "pl"))
 
@@ -2829,6 +2917,8 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
     stats["replay"] += int(meta["replay"])
     stats["stages"] += int(bool(meta["stage"]))
     stats["translated"] += int(meta["translated"])
+    stats["live_inferred"] = stats.get("live_inferred", 0) + int(bool(meta.get("live_inferred")))
+    stats["live_morning_suppressed"] = stats.get("live_morning_suppressed", 0) + int(bool(meta.get("live_morning_suppressed")))
     if meta["sport"]:
         stats["sports"][meta["sport"]] += 1
     stats["participant_enriched"] = stats.get("participant_enriched", 0) + int(bool(meta.get("participants_enriched")))
@@ -3719,7 +3809,7 @@ def main():
         out_root.append(make_channel_element(ch_cfg["id"], ch_cfg["name"], source_channel))
         resolved.append((ch_cfg, resolved_source, source_id, source_channel, source_programme_count, resolution))
 
-    total_keys = ["programmes","live","live_explicit","external_live","external_live_high","external_live_medium","external_live_rejected_risky","replay","stages","translated"]
+    total_keys = ["programmes","live","live_explicit","external_live","external_live_high","external_live_medium","external_live_rejected_risky","replay","stages","translated","live_inferred","live_morning_suppressed"]
     totals = {k:0 for k in total_keys}
     totals["sports"] = defaultdict(int)
     totals["leagues"] = defaultdict(int)
@@ -3740,6 +3830,7 @@ def main():
             "channel_lkg_meta":resolution.get("channel_lkg_meta"),
             "programmes":0,"live":0,"live_explicit":0,"external_live":0,
             "external_live_high":0,"external_live_medium":0,"external_live_rejected_risky":0,"replay":0,"stages":0,"translated":0,
+            "live_inferred":0,"live_morning_suppressed":0,
             "sports":defaultdict(int),"leagues":defaultdict(int),"live_matches":[]
         }
         stats["has_icon"] = bool(source_channel is not None and source_channel.find("icon") is not None)

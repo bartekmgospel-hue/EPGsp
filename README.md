@@ -38,3 +38,16 @@ Dla kanału **HR Max Sport 1** głównym źródłem EPG jest teraz:
 `https://iptv-org.github.io/epg/guides/hr/maxtv.hrvatskitelekom.hr.xml`
 
 Źródło: MAXtv / Hrvatski Telekom (mirror iptv-org). Priorytetowy identyfikator XMLTV: `MaxSport1.hr`.
+
+
+## LIVE accuracy patch
+
+Ta paczka zawiera dodatkową korektę oznaczeń LIVE:
+
+- rozszerzone rozpoznawanie powtórek: `powtórka`, `retransmisja`, `zapis meczu`, `recorded`, `encore` itd.;
+- poranne retransmisje europejskich lig (m.in. Ekstraklasa) w godz. ok. 04:00–10:30 nie są już automatycznie uznawane za LIVE tylko dlatego, że źródłowy tytuł zawiera słowo `LIVE`;
+- jeżeli Sport TV Guide potwierdzi konkretny event, zewnętrzny match ma pierwszeństwo nad heurystyką porannej powtórki;
+- wydarzenia wyglądające jak realny mecz/wyścig (`mecz`, `Team A - Team B`, Grand Prix, półfinał, finał itd.) mogą dostać LIVE także bez literalnego słowa `LIVE`, ale tylko w rozsądnym przedziale godzinowym i przy typowym czasie trwania transmisji;
+- dopasowanie zewnętrzne zostało wzmocnione dla przypadku: wspólny uczestnik + ta sama dyscyplina + start w granicach 45 minut.
+
+Nowe liczniki diagnostyczne w raporcie: `live_inferred` oraz `live_morning_suppressed`.
