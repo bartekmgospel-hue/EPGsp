@@ -1,4 +1,4 @@
-name: Build and publish Sports EPG v3.18
+name: Build and publish Sports EPG v3.19
 
 on:
   workflow_dispatch:
@@ -44,9 +44,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .cache
-          key: sportguide-${{ runner.os }}-${{ github.run_id }}
+          key: sports-epg-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
-            sportguide-${{ runner.os }}-
+            sports-epg-${{ runner.os }}-
       - run: python verify_config.py
       - run: python smoke_test.py
       - run: python quality_test.py
@@ -67,11 +67,13 @@ jobs:
       - run: python v316_test.py
       - run: python v317_test.py
       - run: python v318_test.py
-          python v318_livefix_test.py
+      - run: python v318_livefix_test.py
+      - run: python v318_livefix2_test.py
       - run: python v318_sport_icons_test.py
       - run: python v318_canal_extra_test.py
       - run: python v318_plusx_test.py
       - run: python v318_plusx_expand_test.py
+      - run: python v319_sofascore_test.py
       - run: python epg_generator.py
 
       - name: Prepare GitHub Pages
