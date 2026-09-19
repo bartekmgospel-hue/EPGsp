@@ -15,7 +15,7 @@ settings:
   output_gz: docs/sports_epg.xml.gz
   report_file: docs/report.json
   status_file: docs/status.html
-  generator_name: Bartosz Sports EPG v3.18
+  generator_name: Bartosz Sports EPG v3.19
   fail_on_missing_channels: false
   external_live_time_tolerance_minutes: 150
   external_live_min_title_score: 0.3
@@ -35,6 +35,19 @@ settings:
   fail_on_empty_channels: false
   source_prefer_nonempty_candidate: true
   external_live_use_description: true
+  # v3.19 Sofascore event-time verification
+  sofascore_enabled: true
+  sofascore_api_url: https://www.sofascore.com/api/v1/sport/{sport}/scheduled-events/{date}
+  sofascore_timeout_seconds: 20
+  sofascore_cache_dir: .cache/sofascore
+  sofascore_cache_max_age_hours: 6
+  sofascore_stale_cache_max_age_hours: 48
+  sofascore_min_match_score: 0.52
+  sofascore_min_team_sides: 2
+  sofascore_live_time_tolerance_minutes: 75
+  sofascore_replay_min_delta_minutes: 180
+  sofascore_replay_max_delta_hours: 36
+  sofascore_report_file: docs/sofascore_live.json
   external_live_entity_min_overlap: 2
   source_autodiscovery_enabled: true
   source_autodiscovery_min_score: 0.86

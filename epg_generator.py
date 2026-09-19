@@ -69,6 +69,23 @@ SPORTS = [
     {"key":"padel","pl":"Padel","en":"Padel","emoji":"🎾","terms":["padel","premier padel"]},
 ]
 
+
+# v3.19: Sofascore schedule verification.  Sofascore is used as a conservative
+# reference clock for real sporting events, not as a source of TV listings.
+SOFASCORE_SPORT_SLUGS = {
+    "football": "football",
+    "basketball": "basketball",
+    "tennis": "tennis",
+    "volleyball": "volleyball",
+    "handball": "handball",
+    "hockey": "ice-hockey",
+    "baseball": "baseball",
+    "american_football": "american-football",
+    "rugby": "rugby",
+    "water_polo": "water-polo",
+    "futsal": "futsal",
+}
+
 LIVE_EXPLICIT = [
     r"\buživo\b", r"\buzivo\b", r"\blive\b", r"\bdirektno\b", r"\bdirect\b",
     r"\bprijenos uživo\b", r"\bprenos uživo\b", r"\ben vivo\b", r"\bao vivo\b", r"\bživě\b", r"\bnaživo\b", r"\bélő\b", r"\bcanlı\b", r"\bsuora\b"
@@ -337,6 +354,24 @@ EVENT_LIKE_TERMS = [
     r"\bkolejka\b", r"\bturniej\b", r"\bwy[sś]cig\b", r"\betap\b"
 ]
 
+# High-confidence competition + fixture patterns. These are used when a provider does not
+# explicitly tag a genuine live event. The morning replay guard still has priority.
+HIGH_CONFIDENCE_LIVE_COMPETITIONS = [
+    r"\bpko(?: bp)? ekstraklasa\b", r"\bekstraklasa\b",
+    r"\buefa champions league\b", r"\bchampions league\b",
+    r"\beuropa league\b", r"\bconference league\b",
+    r"\bla liga\b", r"\bserie a\b", r"\bbundesliga\b",
+    r"\bliga portugal(?: betclic)?\b", r"\bpremier league\b",
+    r"\bplusliga\b", r"\borlen superliga\b", r"\bpge ekstraliga\b",
+]
+
+def high_confidence_fixture(text: str) -> bool:
+    hay = ascii_fold(text or "")
+    # Require a competition signal AND a real fixture-like separator / explicit match token.
+    has_comp = any(re.search(p, hay, flags=re.I) for p in HIGH_CONFIDENCE_LIVE_COMPETITIONS)
+    has_fixture = bool(re.search(r"\b[^:|]{2,}\s[-–—]\s[^:|]{2,}\b", text or "", flags=re.I)) or bool(re.search(r"\b(?:mecz|vs\.?|v\.?)\b", hay, flags=re.I))
+    return has_comp and has_fixture
+
 def programme_local_time(prog_dt: datetime | None, station_timezone: str | None) -> datetime | None:
     return localize_datetime(prog_dt, station_timezone) if prog_dt is not None else None
 
@@ -371,12 +406,14 @@ def infer_likely_live_event(text: str, prog_dt: datetime | None, stop_dt: dateti
     if not contains_any(text, EVENT_LIKE_TERMS):
         return False
     local = programme_local_time(prog_dt, station_timezone)
-    if local is None:
-        return False
-    hour = local.hour + local.minute / 60.0
     # Domestic/European sports are very rarely live in the early morning.
     if suspicious_morning_replay(text, prog_dt, station_timezone, None):
         return False
+    # A strong competition+fixture title (e.g. "PKO BP Ekstraklasa: Widzew Łódź - Wieczysta Kraków")
+    # may be safely inferred even when the XMLTV feed omits a usable start timestamp.
+    if local is None:
+        return high_confidence_fixture(text)
+    hour = local.hour + local.minute / 60.0
     earliest = {
         "football": 10.5, "volleyball": 9.5, "handball": 9.5, "speedway": 10.0,
         "motorsport": 7.0, "motocross": 7.0, "cycling": 8.0, "tennis": 7.0,
@@ -392,6 +429,152 @@ def infer_likely_live_event(text: str, prog_dt: datetime | None, stop_dt: dateti
         except Exception:
             pass
     return True
+
+
+def sofascore_cache_path(sport_slug: str, date_str: str, settings: dict) -> Path:
+    cache_dir = BASE_DIR / settings.get("sofascore_cache_dir", ".cache/sofascore")
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    return cache_dir / f"{sport_slug}-{date_str}.json"
+
+
+def _sofascore_read_cache(path: Path, max_age_hours: float | None = None) -> dict | None:
+    try:
+        if not path.exists():
+            return None
+        if max_age_hours is not None:
+            age_h = (time.time() - path.stat().st_mtime) / 3600.0
+            if age_h > max_age_hours:
+                return None
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
+
+
+def sofascore_fetch_day(sport_key: str, date_str: str, settings: dict, state: dict) -> list[dict]:
+    """Fetch/cached scheduled events for one sport/day. Network failures are non-fatal."""
+    slug = SOFASCORE_SPORT_SLUGS.get(sport_key)
+    if not slug or not settings.get("sofascore_enabled", True):
+        return []
+    cache_key = (slug, date_str)
+    if cache_key in state.setdefault("day_cache", {}):
+        return state["day_cache"][cache_key]
+
+    path = sofascore_cache_path(slug, date_str, settings)
+    fresh_h = float(settings.get("sofascore_cache_max_age_hours", 6.0))
+    stale_h = float(settings.get("sofascore_stale_cache_max_age_hours", 48.0))
+    payload = _sofascore_read_cache(path, fresh_h)
+    origin = "fresh-cache" if payload else None
+    url_tpl = settings.get("sofascore_api_url", "https://www.sofascore.com/api/v1/sport/{sport}/scheduled-events/{date}")
+    url = url_tpl.format(sport=slug, date=date_str)
+
+    if payload is None:
+        try:
+            r = requests.get(url, timeout=int(settings.get("sofascore_timeout_seconds", 20)), headers={
+                "User-Agent": settings.get("sofascore_user_agent", "Mozilla/5.0 (compatible; SportsEPG/3.19)"),
+                "Accept": "application/json,text/plain,*/*",
+            })
+            r.raise_for_status()
+            payload = r.json()
+            if not isinstance(payload, dict):
+                raise ValueError("unexpected JSON")
+            path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            origin = "network"
+            state["requests_ok"] = state.get("requests_ok", 0) + 1
+        except Exception as exc:
+            state["requests_failed"] = state.get("requests_failed", 0) + 1
+            state.setdefault("errors", []).append({"sport": sport_key, "date": date_str, "error": str(exc)[:240]})
+            payload = _sofascore_read_cache(path, stale_h)
+            if payload:
+                origin = "stale-cache"
+                state["stale_cache_hits"] = state.get("stale_cache_hits", 0) + 1
+
+    rows = []
+    for ev in (payload or {}).get("events", []) or []:
+        try:
+            ts = ev.get("startTimestamp")
+            if ts is None:
+                continue
+            dt = datetime.fromtimestamp(int(ts), tz=timezone.utc)
+            home = ((ev.get("homeTeam") or {}).get("name") or "").strip()
+            away = ((ev.get("awayTeam") or {}).get("name") or "").strip()
+            name = (ev.get("name") or "").strip()
+            title = f"{home} - {away}" if home and away else name
+            tournament = (((ev.get("tournament") or {}).get("name")) or "").strip()
+            rows.append({
+                "id": ev.get("id"), "sport": sport_key, "title": title,
+                "home": home, "away": away, "tournament": tournament,
+                "start": dt, "status": ((ev.get("status") or {}).get("type") or ""),
+                "source": "sofascore", "source_url": url, "origin": origin,
+            })
+        except Exception:
+            continue
+    state["day_cache"][cache_key] = rows
+    state["events_loaded"] = state.get("events_loaded", 0) + len(rows)
+    return rows
+
+
+def _team_tokens(text: str) -> set[str]:
+    stop = {"fc","cf","ac","sc","ks","rks","mks","ssa","club","klub","the","team","women","men","u19","u20","u21","u23"}
+    toks = [x for x in re.findall(r"[a-z0-9]+", ascii_fold(text or "")) if len(x) >= 3 and x not in stop]
+    return set(toks)
+
+
+def _sofascore_event_title_score(programme_text: str, event: dict) -> tuple[float, int]:
+    hay = ascii_fold(programme_text or "")
+    pt = _team_tokens(hay)
+    home_t = _team_tokens(event.get("home", ""))
+    away_t = _team_tokens(event.get("away", ""))
+    all_t = home_t | away_t
+    overlap = len(pt & all_t)
+    # Require evidence from both sides when possible; protects against common club names.
+    sides = int(bool(pt & home_t)) + int(bool(pt & away_t))
+    seq = SequenceMatcher(None, ascii_fold(event.get("title", "")), hay).ratio()
+    token_score = overlap / max(2, min(max(len(all_t), 1), 6))
+    return min(1.0, 0.72 * token_score + 0.28 * seq), sides
+
+
+def sofascore_verify_programme(text: str, prog_dt: datetime | None, station_timezone: str | None,
+                               sport_key: str | None, settings: dict, state: dict) -> dict:
+    """Return confirmed/replay/no-evidence decision by matching programme to Sofascore event clock."""
+    out = {"decision": "none", "score": 0.0, "event": None, "time_delta_minutes": None, "reason": ""}
+    if not prog_dt or not sport_key or sport_key not in SOFASCORE_SPORT_SLUGS or not settings.get("sofascore_enabled", True):
+        return out
+    # Only fixture-like programmes are safe to verify.
+    if not contains_any(text, EVENT_LIKE_TERMS):
+        return out
+    local = programme_local_time(prog_dt, station_timezone) or prog_dt
+    dates = [(local.date() + timedelta(days=d)).isoformat() for d in (-1, 0, 1)]
+    candidates = []
+    for ds in dates:
+        candidates.extend(sofascore_fetch_day(sport_key, ds, settings, state))
+    if not candidates:
+        return out
+
+    best = None
+    for ev in candidates:
+        score, sides = _sofascore_event_title_score(text, ev)
+        if sides < int(settings.get("sofascore_min_team_sides", 2)):
+            continue
+        delta = abs((prog_dt.astimezone(timezone.utc) - ev["start"]).total_seconds()) / 60.0
+        # Prefer team identity first, then temporal closeness.
+        rank = score * 100.0 - min(delta, 1440.0) / 180.0
+        if best is None or rank > best[0]:
+            best = (rank, score, sides, delta, ev)
+    if best is None:
+        return out
+    _, score, sides, delta, ev = best
+    out.update({"score": round(score, 3), "event": ev, "time_delta_minutes": round(delta, 1)})
+    min_score = float(settings.get("sofascore_min_match_score", 0.52))
+    live_tol = float(settings.get("sofascore_live_time_tolerance_minutes", 75))
+    replay_delta = float(settings.get("sofascore_replay_min_delta_minutes", 180))
+    replay_window = float(settings.get("sofascore_replay_max_delta_hours", 36)) * 60.0
+    if score >= min_score and delta <= live_tol:
+        out.update({"decision": "live", "reason": "matched_event_time"})
+    elif score >= min_score and replay_delta <= delta <= replay_window:
+        out.update({"decision": "replay", "reason": "same_fixture_different_time"})
+    return out
+
 
 def fetch_bytes(url: str, timeout: int = 60, user_agent: str = "SportsEPG-v2/2.0") -> bytes:
     r = requests.get(url, timeout=timeout, headers={"User-Agent": user_agent})
@@ -2038,17 +2221,23 @@ def should_prefer_external_title(original_title: str, translated_title: str, ext
 def format_title(original_title: str, context_text: str, settings: dict, replacements: dict,
                  external_match: dict|None = None, external_score: float | None = None,
                  channel_name: str | None = None, prog_dt: datetime | None = None,
-                 stop_dt: datetime | None = None, station_timezone: str | None = None) -> tuple[str,dict]:
+                 stop_dt: datetime | None = None, station_timezone: str | None = None,
+                 sofascore_verdict: dict | None = None) -> tuple[str,dict]:
     external_title = external_match.get("title","") if external_match else ""
     context = normalized(" ".join([original_title, context_text, external_title, channel_name or ""]))
     replay = contains_any(context, REPLAY_TERMS)
     explicit_live_raw = detect_explicit_live(context)
-    morning_guard = suspicious_morning_replay(context, prog_dt, station_timezone, external_match)
+    sofa_decision = (sofascore_verdict or {}).get("decision", "none")
+    sofa_live = sofa_decision == "live"
+    sofa_replay = sofa_decision == "replay"
+    morning_guard = suspicious_morning_replay(context, prog_dt, station_timezone, external_match if not sofa_replay else None)
     inferred_live = infer_likely_live_event(context, prog_dt, stop_dt, station_timezone, external_match)
-    explicit_live = bool(explicit_live_raw and not morning_guard and not replay)
-    if morning_guard and explicit_live_raw:
+    explicit_live = bool(explicit_live_raw and not morning_guard and not replay and not sofa_replay)
+    if (morning_guard and explicit_live_raw) or sofa_replay:
         replay = True
-    live = (external_match is not None or explicit_live or inferred_live) and not replay
+    # v3.19 precedence: Sofascore confirmed event time > Sport TV Guide > explicit provider LIVE > heuristic.
+    # A Sofascore same-fixture/different-time match is a hard replay veto.
+    live = (sofa_live or external_match is not None or explicit_live or inferred_live) and not replay
 
     sport = sport_from_text(context) or fallback_sport_from_channel(channel_name)
     league = league_from_text(context)
@@ -2096,6 +2285,9 @@ def format_title(original_title: str, context_text: str, settings: dict, replace
         "participant_title": participant_meta.get("title"),
         "live_inferred": bool(inferred_live and external_match is None and not explicit_live),
         "live_morning_suppressed": bool(morning_guard and explicit_live_raw),
+        "sofascore_live": bool(sofa_live),
+        "sofascore_replay": bool(sofa_replay),
+        "sofascore_decision": sofa_decision,
     }
 
 def programme_count_by_channel(root: ET.Element) -> dict[str, int]:
@@ -2805,7 +2997,8 @@ def cleanup_mixed_offset_programmes(programmes: list[ET.Element], settings: dict
 
 
 def transform_programme(prog: ET.Element, target_id: str, settings: dict, replacements: dict,
-                        external_events: list[dict], stats: dict, station_timezone: str | None = None):
+                        external_events: list[dict], stats: dict, station_timezone: str | None = None,
+                        sofascore_state: dict | None = None):
     p = copy.deepcopy(prog)
     p.set("channel", target_id)
     title_el = p.find("title")
@@ -2834,6 +3027,18 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
         entity_min_overlap=int(settings.get("external_live_entity_min_overlap", 2)),
     )
 
+    # v3.19: verify the actual event clock independently of the TV guide.
+    sofa_state = sofascore_state if sofascore_state is not None else {}
+    preliminary_sport = sport_from_text(" ".join([original, context, target_id]))
+    sofa = sofascore_verify_programme(
+        " ".join([original, context]), start_dt, station_timezone,
+        preliminary_sport.get("key") if preliminary_sport else None, settings, sofa_state
+    )
+    if sofa.get("decision") == "live":
+        stats["sofascore_live_confirmed"] = stats.get("sofascore_live_confirmed", 0) + 1
+    elif sofa.get("decision") == "replay":
+        stats["sofascore_replays_suppressed"] = stats.get("sofascore_replays_suppressed", 0) + 1
+
     pre_audit = None
     if ext:
         pre_conf = confidence_label(ext_score, float(settings.get("external_live_high_confidence", 0.78)))
@@ -2842,7 +3047,7 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
             stats["external_live_rejected_risky"] += 1
             ext = None
 
-    new_title, meta = format_title(original, context, settings, replacements, ext, external_score=ext_score if ext else None, channel_name=target_id, prog_dt=start_dt, stop_dt=stop_dt, station_timezone=station_timezone)
+    new_title, meta = format_title(original, context, settings, replacements, ext, external_score=ext_score if ext else None, channel_name=target_id, prog_dt=start_dt, stop_dt=stop_dt, station_timezone=station_timezone, sofascore_verdict=sofa)
     title_el.text = new_title
     title_el.set("lang", settings.get("target_language", "pl"))
 
@@ -2919,6 +3124,8 @@ def transform_programme(prog: ET.Element, target_id: str, settings: dict, replac
     stats["translated"] += int(meta["translated"])
     stats["live_inferred"] = stats.get("live_inferred", 0) + int(bool(meta.get("live_inferred")))
     stats["live_morning_suppressed"] = stats.get("live_morning_suppressed", 0) + int(bool(meta.get("live_morning_suppressed")))
+    stats["sofascore_live"] = stats.get("sofascore_live", 0) + int(bool(meta.get("sofascore_live")))
+    stats["sofascore_replay"] = stats.get("sofascore_replay", 0) + int(bool(meta.get("sofascore_replay")))
     if meta["sport"]:
         stats["sports"][meta["sport"]] += 1
     stats["participant_enriched"] = stats.get("participant_enriched", 0) + int(bool(meta.get("participants_enriched")))
@@ -3571,6 +3778,8 @@ th{{position:sticky;top:0;background:#f9fafb;z-index:1}} tr:hover{{background:#f
 <div class="card"><div class="muted">Programy</div><div class="big">{s['programmes']}</div></div>
 <div class="card"><div class="muted">LIVE</div><div class="big">{s['live']}</div></div>
 <div class="card"><div class="muted">External LIVE</div><div class="big">{s.get('external_live',0)}</div></div>
+<div class="card"><div class="muted">Sofascore LIVE</div><div class="big">{s.get('sofascore_live',0)}</div></div>
+<div class="card"><div class="muted">Sofascore replay veto</div><div class="big">{s.get('sofascore_replay',0)}</div></div>
 <div class="card"><div class="muted">Build health</div><div class="big">{html.escape(str(s.get('health_status','—')).upper())}</div></div>
 <div class="card"><div class="muted">Health score</div><div class="big">{s.get('health_score','—')}/100</div></div>
 <div class="card"><div class="muted">Trend</div><div class="big">{html.escape(str(s.get('health_trend_status','—')).upper())}</div></div>
@@ -3604,7 +3813,8 @@ th{{position:sticky;top:0;background:#f9fafb;z-index:1}} tr:hover{{background:#f
 <div class="grid2"><div class="panel"><b>Interpretacja quality score</b><p class="muted">To techniczna ocena spójności ramówki (czasy, duplikaty, luki, nakładki, pokrycie). Nie jest oceną prawdziwości programu ani jakości stacji.</p></div>
 <div class="panel"><b>Najczęściej wykrywane rozgrywki</b><ol>{top_leagues_html}</ol></div></div>
 <div class="panel" style="margin-top:16px"><b>External LIVE diagnostics</b><p class="muted">URLs tried: {report.get('external_live',{}).get('urls_tried',0)} · auto channels: {report.get('external_live',{}).get('auto_channels_attempted',0)} · pages with events: {report.get('external_live',{}).get('pages_with_events',0)} · empty pages: {report.get('external_live',{}).get('pages_empty',0)} · failed: {report.get('external_live',{}).get('pages_failed',0)} · events found: {report.get('external_live',{}).get('events_found',0)}</p></div>
-<div class="toolbar"><input id="q" placeholder="Filtruj kanał…"><select id="quality"><option value="all">Wszystkie</option><option value="warn">Tylko ostrzeżenia</option></select><a href="report.json">report.json</a><a href="quality_report.json">quality_report.json</a><a href="live_matches.json">live_matches.json</a><a href="empty_channels.json">empty_channels.json</a><a href="live_audit.json">live_audit.json</a><a href="source_recommendations.json">source_recommendations.json</a><a href="sportguide_catalog.json">sportguide_catalog.json</a></div>
+<div class="panel" style="margin-top:16px"><b>Sofascore verification</b><p class="muted">requests OK: {report.get('sofascore',{}).get('requests_ok',0)} · failed: {report.get('sofascore',{}).get('requests_failed',0)} · stale cache: {report.get('sofascore',{}).get('stale_cache_hits',0)} · events loaded: {report.get('sofascore',{}).get('events_loaded',0)}</p></div>
+<div class="toolbar"><input id="q" placeholder="Filtruj kanał…"><select id="quality"><option value="all">Wszystkie</option><option value="warn">Tylko ostrzeżenia</option></select><a href="report.json">report.json</a><a href="quality_report.json">quality_report.json</a><a href="live_matches.json">live_matches.json</a><a href="empty_channels.json">empty_channels.json</a><a href="live_audit.json">live_audit.json</a><a href="source_recommendations.json">source_recommendations.json</a><a href="sportguide_catalog.json">sportguide_catalog.json</a><a href="sofascore_live.json">sofascore_live.json</a></div>
 <div class="wrap"><table id="tbl"><thead><tr><th></th><th>Kanał</th><th>Stan</th><th>Quality</th><th>Programy</th><th>LIVE</th><th>High/Med</th><th>Replay</th><th>Luki</th><th>Nakładki</th><th>Duplikaty</th><th>Pokrycie h</th><th>Top ligi</th><th>Ostrzeżenia</th><th>Źródło</th><th>Source ID</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
 <script>
 const q=document.getElementById('q'), sel=document.getElementById('quality');
@@ -3801,6 +4011,7 @@ def main():
 
     sportguide_catalog = load_sportguide_catalog(external_cfg)
     prime_sportguide_catalog(sportguide_catalog, external_cfg, report)
+    sofascore_state = {"day_cache": {}, "requests_ok": 0, "requests_failed": 0, "stale_cache_hits": 0, "events_loaded": 0, "errors": []}
 
     out_root = ET.Element("tv", {"generator-info-name":settings.get("generator_name","Sports EPG v3.18")})
     resolved = []
@@ -3809,7 +4020,7 @@ def main():
         out_root.append(make_channel_element(ch_cfg["id"], ch_cfg["name"], source_channel))
         resolved.append((ch_cfg, resolved_source, source_id, source_channel, source_programme_count, resolution))
 
-    total_keys = ["programmes","live","live_explicit","external_live","external_live_high","external_live_medium","external_live_rejected_risky","replay","stages","translated","live_inferred","live_morning_suppressed"]
+    total_keys = ["programmes","live","live_explicit","external_live","external_live_high","external_live_medium","external_live_rejected_risky","replay","stages","translated","live_inferred","live_morning_suppressed","sofascore_live","sofascore_replay","sofascore_live_confirmed","sofascore_replays_suppressed"]
     totals = {k:0 for k in total_keys}
     totals["sports"] = defaultdict(int)
     totals["leagues"] = defaultdict(int)
@@ -3830,7 +4041,8 @@ def main():
             "channel_lkg_meta":resolution.get("channel_lkg_meta"),
             "programmes":0,"live":0,"live_explicit":0,"external_live":0,
             "external_live_high":0,"external_live_medium":0,"external_live_rejected_risky":0,"replay":0,"stages":0,"translated":0,
-            "live_inferred":0,"live_morning_suppressed":0,
+            "live_inferred":0,"live_morning_suppressed":0,"sofascore_live":0,"sofascore_replay":0,
+            "sofascore_live_confirmed":0,"sofascore_replays_suppressed":0,
             "sports":defaultdict(int),"leagues":defaultdict(int),"live_matches":[]
         }
         stats["has_icon"] = bool(source_channel is not None and source_channel.find("icon") is not None)
@@ -3906,7 +4118,7 @@ def main():
         for prog in programmes:
             out_root.append(transform_programme(
                 prog, ch_cfg["id"], settings, replacements, external_events, stats,
-                station_timezone=source_timezone
+                station_timezone=source_timezone, sofascore_state=sofascore_state
             ))
 
         all_live_matches.extend(stats.pop("live_matches"))
@@ -3939,6 +4151,16 @@ def main():
     warn_below = float(settings.get("quality_score_warn_below", 75))
     usage = external_usage_metrics(all_live_matches)
     recommendation_history,promotion_candidates=update_recommendation_history(report,settings) if settings.get("recommendation_history_enabled",True) else ({"items":{}},[])
+
+    report["sofascore"] = {
+        "enabled": bool(settings.get("sofascore_enabled", True)),
+        "requests_ok": sofascore_state.get("requests_ok", 0),
+        "requests_failed": sofascore_state.get("requests_failed", 0),
+        "stale_cache_hits": sofascore_state.get("stale_cache_hits", 0),
+        "events_loaded": sofascore_state.get("events_loaded", 0),
+        "days_cached": len(sofascore_state.get("day_cache", {})),
+        "errors": sofascore_state.get("errors", [])[-30:],
+    }
 
     report["summary"] = {
         **{k:v for k,v in totals.items() if k not in ("sports","leagues")},
@@ -4051,6 +4273,7 @@ def main():
     audit_file = BASE_DIR / settings.get("live_audit_file", "docs/live_audit.json")
     recommendations_file = BASE_DIR / settings.get("source_recommendations_file", "docs/source_recommendations.json")
     catalog_file = BASE_DIR / settings.get("sportguide_catalog_file", "docs/sportguide_catalog.json")
+    sofascore_file = BASE_DIR / settings.get("sofascore_report_file", "docs/sofascore_live.json")
     recovery_file = BASE_DIR / settings.get("source_recovery_file", "docs/source_recovery.json")
     verified_fallback_file = BASE_DIR / settings.get("verified_fallback_report_file", "docs/verified_fallbacks.json")
     channel_recovery_file = BASE_DIR / settings.get("channel_recovery_file", "docs/channel_recovery.json")
@@ -4130,6 +4353,7 @@ def main():
     recommendations_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
                                                 "channels":reco_rows},ensure_ascii=False,indent=2),encoding="utf-8")
     catalog_file.write_text(json.dumps(sportguide_catalog,ensure_ascii=False,indent=2),encoding="utf-8")
+    sofascore_file.write_text(json.dumps(report.get("sofascore", {}), ensure_ascii=False, indent=2, default=str), encoding="utf-8")
     recovery_file.write_text(json.dumps({"version":"3.18","generated_at_utc":report["generated_at_utc"],
         "sources":report["sources"],
         "degraded_sources":[{"source":name,**row} for name,row in report["sources"].items() if row.get("degraded")],

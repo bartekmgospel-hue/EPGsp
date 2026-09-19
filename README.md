@@ -1,53 +1,48 @@
-# Sports EPG v3.18 — PlusX expanded SPORT/UK/US/DE/CZ/SK/CA
+# Bartosz Sports EPG v3.19 — Sofascore LIVE verification
 
-Ta wersja zachowuje wcześniejsze funkcje v3.18 i rozszerza integrację z `http://list.plusx.tv/pl10.gz`.
+Ta wersja rozwija v3.18 LIVE Accuracy 2 i dodaje drugą, niezależną warstwę weryfikacji transmisji LIVE na podstawie terminarza Sofascore.
 
-## Nowe
-- automatyczne wykrywanie dodatkowych kanałów sportowych z PlusX
-- zakres krajów: UK, US, DE, CZ, SK, CA
-- dodatkowo globalny tryb SPORT: pewnie rozpoznane kanały sportowe mogą być dodane także spoza tych krajów
-- kanały już istniejące w katalogu nie są duplikowane
-- autoimport zachowuje oryginalny XMLTV `channel id`, co ułatwia automatyczne dopasowanie w TiviMate
-- raport: `docs/plusx_autoimport.json`
+## Najważniejsza zmiana
 
-## Ważne
-XMLTV nie przechowuje typowej nazwy grupy IPTV typu `SPORT`, `UK`, `US` itd. Dlatego autoimport opiera się na kodzie kraju w `channel id` / nazwie kanału oraz konserwatywnym rozpoznawaniu sieci sportowych. Dzięki temu nie dodaje masowo kanałów ogólnych, np. BBC One.
+Sofascore nie zastępuje EPG. Generator używa go jako zegara referencyjnego dla realnego wydarzenia sportowego:
 
-## Nadal aktywne
-- polskie PlusX jako dodatkowe źródło priorytetowe
-- polskie tłumaczenia tytułów
-- tylko wersja przetłumaczona, bez dodatkowego `Original/Oryginał`
-- ikony sportów i LIVE
-- wzbogacanie tytułów o drużyny/zawodników
-- snapshot-aware External LIVE monitoring
+1. rozpoznaje dyscyplinę i uczestników w tytule EPG,
+2. pobiera wydarzenia Sofascore dla dnia poprzedniego, bieżącego i następnego,
+3. dopasowuje obie drużyny/zawodników oraz godzinę,
+4. zgodność wydarzenia i czasu -> `🔴 LIVE`,
+5. ten sam mecz znaleziony kilka godzin wcześniej/później -> emisja traktowana jako powtórka i LIVE jest blokowane.
 
-## Canal+ Extra 1–7
+To ma szczególnie poprawić Eleven Sports, Canal+ Sport/Extra, Polsat Sport i inne kanały, gdzie dostawca EPG nie podaje wiarygodnego znacznika LIVE.
 
-Dodano ręcznie kanały `PL CANAL+ EXTRA 1` … `PL CANAL+ EXTRA 7` z priorytetowym źródłem `poland_plusx` (`http://list.plusx.tv/pl10.gz`). Każdy kanał ma kilka wariantów możliwego `source_id` oraz `autodiscover: true`, dzięki czemu generator może odnaleźć właściwy identyfikator nawet wtedy, gdy PlusX używa innego zapisu nazwy.
+## Priorytet decyzji v3.19
 
-## Korekta źródeł Arena/Max Sport
-- SR Arena Sport 6–10: tylko źródło `arena_rs`; usunięto błędny fallback do PlusX.
-- HR Max Sport 1: tylko źródło `sportklub`; usunięto błędne odwołanie do PlusX.
-- Jeżeli kanału nie ma w realnym feedzie źródłowym, generator pozostawi go jako brakujący zamiast sztucznie dopasowywać do PlusX.
+`Sofascore potwierdzony czas wydarzenia` → `Sport TV Guide` → `jawne LIVE w EPG` → `heurystyka`.
 
+Jeżeli Sofascore znajdzie ten sam mecz o innej godzinie (domyślnie różnica >= 180 min i <= 36 h), działa **replay veto** — taki program nie będzie oznaczony jako LIVE nawet wtedy, gdy provider pozostawił w tytule słowo LIVE.
 
-## MAXSport 1 — nowe źródło
+## Bezpieczeństwo i fallback
 
-Dla kanału **HR Max Sport 1** głównym źródłem EPG jest teraz:
+Integracja jest opcjonalna i awaria Sofascore nie zatrzymuje buildu. Dane są cache'owane w `.cache/sofascore`:
+- świeży cache: 6 h,
+- awaryjny stale cache: do 48 h,
+- po braku danych generator wraca do Sport TV Guide i dotychczasowych reguł.
 
-`https://iptv-org.github.io/epg/guides/hr/maxtv.hrvatskitelekom.hr.xml`
+Endpoint Sofascore używany przez stronę nie jest tu traktowany jako gwarantowane publiczne API, dlatego integracja jest odseparowana i ma cache/fallback.
 
-Źródło: MAXtv / Hrvatski Telekom (mirror iptv-org). Priorytetowy identyfikator XMLTV: `MaxSport1.hr`.
+## Diagnostyka
 
+Nowy raport: `docs/sofascore_live.json`.
 
-## LIVE accuracy patch
+Status pokazuje dodatkowo:
+- `Sofascore LIVE` — transmisje potwierdzone przez godzinę wydarzenia,
+- `Sofascore replay veto` — emisje rozpoznane jako powtórki tego samego wydarzenia,
+- liczbę udanych/nieudanych zapytań i wydarzeń w cache.
 
-Ta paczka zawiera dodatkową korektę oznaczeń LIVE:
+## Testy
 
-- rozszerzone rozpoznawanie powtórek: `powtórka`, `retransmisja`, `zapis meczu`, `recorded`, `encore` itd.;
-- poranne retransmisje europejskich lig (m.in. Ekstraklasa) w godz. ok. 04:00–10:30 nie są już automatycznie uznawane za LIVE tylko dlatego, że źródłowy tytuł zawiera słowo `LIVE`;
-- jeżeli Sport TV Guide potwierdzi konkretny event, zewnętrzny match ma pierwszeństwo nad heurystyką porannej powtórki;
-- wydarzenia wyglądające jak realny mecz/wyścig (`mecz`, `Team A - Team B`, Grand Prix, półfinał, finał itd.) mogą dostać LIVE także bez literalnego słowa `LIVE`, ale tylko w rozsądnym przedziale godzinowym i przy typowym czasie trwania transmisji;
-- dopasowanie zewnętrzne zostało wzmocnione dla przypadku: wspólny uczestnik + ta sama dyscyplina + start w granicach 45 minut.
+Dodany `v319_sofascore_test.py`, który sprawdza m.in.:
+- `PKO BP Ekstraklasa: Widzew Łódź - Wieczysta Kraków` o właściwej godzinie -> LIVE,
+- ten sam mecz następnego ranka -> powtórka, nawet jeśli provider wpisze LIVE,
+- typowy mecz Eleven Sports `SS Lazio - AC Milan` -> LIVE po zgodności obu drużyn i godziny.
 
-Nowe liczniki diagnostyczne w raporcie: `live_inferred` oraz `live_morning_suppressed`.
+Workflow GitHub Actions został też poprawiony: testy v3.18/v3.19 są osobnymi poprawnymi krokami YAML.
